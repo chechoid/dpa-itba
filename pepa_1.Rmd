@@ -1,0 +1,423 @@
+---
+title: "SOPA 1"
+author: "Arturo De Zan | Sergio Garcia Mora"
+date: "11/6/2021"
+output: 
+  html_document:
+    theme: spacelab
+    highlight: textmate
+    toc: true
+    toc_float: true
+    code_download: true
+    code_folding: show
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE)
+options(scipen = 999)
+```
+
+![](archivos/stats.png){width="421"}
+
+# Introducción
+
+Este es un documento de `RMarkdown` que contiene código de R y que les permitirá además copiar y pegar el código en sus *scripts* para poner en práctica los conceptos de estadística.
+
+También pueden extraer el código de este archivo, guardando el archivo `.Rmd` en la carpeta del proyecto y corriendo esta línea de código en su consola.
+
+```{r intro1, eval=FALSE}
+knitr::purl("sopa_1.Rmd")
+```
+
+## Paquetes o librerías
+
+Para realizar estos ejercicios van a necesitar instalar los siguientes paquetes o librerías. Este paso se realiza **una sola vez** por computadora.
+
+```{r intro2, eval=FALSE}
+install.packages("readxl")       # Lectura de archivos de Excel
+install.packages("tidyverse")    # Limpieza, transformación y manipulación de datos
+install.packages("funModeling")  # Análisis exploratorio de datos
+install.packages("summarytools") # Medidas de análisis estadístico
+install.packages("lubridate")     # Manipulación de fechas
+```
+
+Luego, para utilizar las funciones de los paquetes que acabamos de instalar, necesitamos *"activar"* el paquete con la función `library()`.
+
+```{r librerías}
+library(readxl)
+library(tidyverse)
+library(funModeling)
+library(lubridate)
+library(summarytools)
+```
+
+# Carga de Datos
+
+Vamos a utilizar dos archivos para trabajar. Uno llamado `plantel.xlsx` que es un listado de empleados, y el archivo `kiwi.csv` que contiene respuestas a la Encuesta KIWI de Sueldos de RRHH realizada por el Club de R para RRHH durante 2020.
+
+> KIWI es un acrónimo de Key Investigation of Wages and Incomes.
+
+```{r carga-datos}
+# Carga de datos --------------------
+
+# Un listado de empleados
+plantel <- read_xlsx("datos/plantel.xlsx")
+
+# Encuesta de Sueldos de RH 2020
+kiwi <- read_delim("datos/kiwi_rh.csv", delim = ",") %>% 
+  filter(pais == "Argentina")
+```
+
+## Limpieza y preparación de datos
+
+Empezaremos añadiendo algunas columnas adicionales al archivo `plantel.xlsx` en función de los campos `fecha_ingreso` y `fecha_nacimiento`.
+
+```{r clean1}
+plantel <- plantel %>% 
+  mutate(anio_ingreso = floor_date(fecha_ingreso,
+                                   unit = "year"),  # Extrae el año de la fecha ingreso
+         q_ingreso = quarter(fecha_ingreso))  # Columna nueva con el trimestre
+
+
+# Creamos una nueva columna uniendo las nuevas columnas que acabamos de crear
+plantel$anioq_ingreso <- paste(plantel$anio_ingreso, plantel$q_ingreso, sep = "-")
+
+
+# Creamos una columna con las generaciones a la que pertenecen los empleados
+# Fuente: https://www.mckinsey.com/industries/consumer-packaged-goods/our-insights/true-gen-generation-z-and-its-implications-for-companies#
+plantel <- plantel %>% 
+  mutate(anio_nacimiento = year(fecha_nacimiento),
+         generacion = case_when(
+           anio_nacimiento <= 1959 ~ "Baby Boomer",
+           anio_nacimiento <= 1979 ~ "Gen X",
+           anio_nacimiento <= 1994 ~ "Gen Y",
+           anio_nacimiento = TRUE  ~ "Gen Z"
+  )) %>% 
+  select(-anio_nacimiento) # Elimina la columna anio_nacimiento
+```
+
+# Distribución de Frecuencias
+
+## Datos categóricos o cualitativos
+
+Calcular las frecuencias de una variable significa contar la cantidad de veces que aparece un valor de una variable.
+
+Por ejemplo, del data frame `plantel` calculemos la cantidad de empleados por *Nivel de Contribución*.
+
+```{r freq1}
+plantel %>% 
+  count(nivel_contribucion, sort = T)
+```
+
+Del data frame `kiwi` podemos calcular la cantidad de casos que permitían tomar mate en la oficina y los que no.
+
+```{r freq2}
+# Contar las empresas donde se podía tomar mate en la oficina
+kiwi %>% 
+  filter(!is.na(mate)) %>% # Filtra las respuestas no nulas
+  count(mate)
+```
+
+## Datos cuantitativos no agrupados
+
+Utilizando nuevamente el data frame `plantel` analicemos la cantidad de contrataciones por trimestre desde el año 2016 en adelante.
+
+```{r freq-cuant-no-a}
+plantel %>%                           # Llama el dataframe 
+  filter(anio_ingreso > 2015) %>%     # Filtra los ingresos posteriores al 2015
+  count(anioq_ingreso)                # Cuenta la cantidad de ingresos por año y trimestre
+```
+
+Teniendo la cantidad de contrataciones por trimestre también podemos calcular las:
+
+-   **Distribución de frecuencias:** Que es el conteo de ingresos por trimestre.
+
+-   **Frecuencias relativas:** Que es el *porcentaje* que representa el conteo sobre el total.
+
+-   **Frecuencia relativas acumuladas:** Que representa el *porcentaje acumulado* de los ingresos de cada trimestre.
+
+Para obtener estos resultados de manera simple, utilizaremos la función `freq()` del paquete `summarytools` :
+
+```{r freq-cuant-no-a2}
+plantel %>% 
+  filter(anio_ingreso > 2015) %>%   # Filtramos los ingresos posteriores a 2015
+  select(anioq_ingreso) %>%         # Seleccionamos la columna de trimestres
+  freq(report.nas = FALSE)          # Calculamos las frecuencias omitiendo los NA
+```
+
+## Datos cuantitativos agrupados
+
+Frecuentemente, la mejor forma de explicar los resultados de una variable **numérica** es agruparla en categorías que permitan contar mejor la historia de esos datos.
+
+Por ejemplo, usemos la columna `contactos_linkedin` de la Encuesta KIWI.
+
+```{r cuant-agrup1}
+contactos <- kiwi %>%                  # Creamos un objeto nuevo llamado contactos
+  select(contactos_linkedin) %>%       # Seleccionamos la columna 'contactos_linkedin'
+  filter(!is.na(contactos_linkedin))   # Filtramos los datos nulos.
+
+# Ver los primeros 50 resultados
+contactos$contactos_linkedin[1:50]
+
+```
+
+Una forma de ver la **distribución** de los resultados es usando un tipo de gráfico llamado **histograma**. Para ello usaremos la función `ggplot()` del paquete `ggplot2`.
+
+```{r cuant-agrup2}
+
+ggplot(contactos,                       # Nombre del data frame
+       aes(x = contactos_linkedin)) +   # Variable que mapeamos en el eje x
+  geom_histogram()                      # Tipo de gráfico
+```
+
+En R hay más de una forma de hacer las cosas. Por ejemplo, usando el paquete `summarytools` podemos crear los grupos de manera más rápida con la función `cut()` y con el parámetro `breaks` le indicamos la cantidad de grupos que queremos.
+
+A continuación vamos a crear 5 grupos (`breaks = 5`) dividiendo en partes iguales a cada grupo. Lo que hace R con esto es tomar todo el rango de valores de la variable numérica y crea cinco secciones iguales.
+
+```{r cuant-agrup5}
+# Creamos una columna nueva para asignar los grupos
+contactos$grupo <- cut(contactos$contactos_linkedin, 
+                       breaks = 5) # Crea 5 grupos
+
+# Calculamos las frecuencias por grupo
+freq(contactos$grupo,
+     report.nas = FALSE)
+```
+
+En ocasiones R, para simplificar la cantidad de ceros de una salidad de un cálculo utiliza una codificación para indicar la cantidad de ceros que tiene el resultado..
+
+En los ejemplos podemos ver que tenemos un 6^e+03^ lo que equivale a un *6* seguidos por 3 posiciones de ceros. Los restantes resultados se interpretan de la siguiente manera.
+
+-   1.2^e+04^ = 12.000
+
+-   1.8^e+04^ = 18.000
+
+-   2.4^e+04^ = 24.000
+
+-   3^e+04^ = 30.000 
+
+Como en R hay más de una forma de hacer las cosas, siempre vamos a estar tomando decisiones entre obtener lo que queremos más rápido y con pocas líneas de código como vimos anteriormente, o bien, dedicar un poco más de esfuerzo en la preparación y limpieza para obtener algo más simple de entender después.
+
+Otra forma de distribuir los resultados en categorías es usando un par de funciones de `tidyverse`. En esta opción estamos creando categorías en base a un criterio arbitrario.
+
+```{r cuant-agrup3}
+contactos_2 <- contactos %>% 
+  mutate(rango_contactos = case_when(          # Para crear categorías según el valor
+    contactos_linkedin < 500   ~ "Hasta 500",          # Grupo 1
+    contactos_linkedin < 2500  ~ "Entre 500 y 2500",   # Grupo 2
+    contactos_linkedin < 5000  ~ "Entre 2500 y 5000",  # Grupo 3
+    contactos_linkedin < 10000 ~ "Entre 5000 y 10000", # Grupo 4
+    contactos_linkedin = T ~ "Más de 10000"            # Grupo 5
+  ),
+  rango_contactos = factor(rango_contactos, 
+                           levels = c("Hasta 500", "Entre 500 y 2500",
+                                      "Entre 2500 y 5000", "Entre 5000 y 10000",
+                                      "Más de 10000"))) # Este es un paso necesario para que los grupos queden mejor ordenados.
+```
+
+Y ahora podemos calcular los rangos de frecuencia:
+
+```{r cuant_agrup4}
+contactos_2 %>% 
+  select(rango_contactos) %>% 
+  freq(report.nas = FALSE)
+```
+
+# Gráficos
+
+## Gráfico de barras
+
+En la Encuesta KIWI se le preguntó a las personas que les exigieron saber un idioma para ser contratadas, qué porcentaje de su jornada, emplean ese idioma en su trabajo actual.
+
+```{r col-plot}
+# Preparación de los datos
+idioma <- kiwi %>%                      # Creamos un nuevo data frame
+  filter(!is.na(idioma_porcentaje),     # Filtro las respuestas nulas
+         idioma_exigencia == "Si") %>%  # Filtro por las personas que sí les exigieron un idioma extranjero para entrar en su trabajo actual
+  count(idioma_porcentaje)              # Cuenta la frecuencia por respuestas
+
+# Realizo el gráfico
+ggplot(idioma,                            # Cargo el data frame 
+       aes(x = factor(idioma_porcentaje), # Con factor() logro mostrar todas las etiquetas del eje
+           y = n)) +                      # mapeo la columna n al eje y
+  geom_col() +                            # Tipo de gráfico
+  # Agrega título y subtítulo al gráfico
+  labs(title = "Porcentaje del tiempo usando idioma extranjero",
+       subtitle = "Personas a las que les exigieron saber un idioma para ser contratadas")
+```
+
+## Histogramas
+
+Los *histogramas* son gráficos que permiten conocer la distribución de una *variable numérica*.\
+
+Para realizar nuestro histograma vamos a utilizar la columna `sueldo_bruto` de la Encuesta KIWI. Hagamos el gráfico.
+
+```{r hist1}
+ggplot(kiwi, aes(x = sueldo_bruto)) +
+  geom_histogram()
+```
+
+Nos sale un gráfico horrible porque la presencia de valores **outliers** nos está "ensuciando" el gráfico. Exploremos esta variable:
+
+```{r hist2-eda}
+summary(kiwi$sueldo_bruto)
+```
+
+Acá podemos percibir que el valor mínimo es \$ 0. Y que el valor máximo es \$ 2.140.000. Así que tenemos que buscar la forma de limpiar estos valores.
+
+Una forma elegante de resolver este problema es buscando los valores que se encuentren entre los percentiles 5 y 95. En otras palabras vamos a hacer una **poda** de los extremos de la variable. Para ello vamos a usar un paquete que se llama `funModeling` y la función `profiling_num`
+
+```{r hist3}
+# Creamos un objeto con los resultados de la función
+limpieza <- profiling_num(kiwi$sueldo_bruto)
+
+# Veamos los valores almacenados
+limpieza
+```
+
+Con esta función puedo saber que el sueldo en el percentil 5 es `r limpieza[1,6]` y que el valor en el percentil 95 es `r limpieza[1,10]`. Ahora puedo eliminar los valores que estén por debajo y por encima de esos percentiles para quedarme con las muestras más representativas.
+
+Exploremos como quedan los valores ahora.
+
+```{r hist4}
+# Creo objetos almacenando los valores de los percentiles 5 y 95
+p05 <- limpieza[1,6]
+p95 <- limpieza[1,10]
+
+# Creo un nuevo data frame llamado 'sueldos'
+sueldos <- kiwi %>% 
+  filter(tipo_contratacion != "Part time",  # Filtro los que no sean Part time
+         between(sueldo_bruto,              # Variable a filtrar con 'between'
+                 p05,                       # Filtro inferior
+                 p95))                      # Filtro superior
+
+# Exploremos la variable sueldo_bruto después de los filtros
+summary(sueldos$sueldo_bruto)
+
+```
+
+Y ahora, con los datos limpios, probemos nuevamente de realizar nuestro histograma:
+
+```{r hist5}
+ggplot(sueldos, aes(x = sueldo_bruto)) +
+  geom_histogram() +
+  ggtitle("Histograma de Sueldo Bruto")
+```
+
+Ahora quedó algo con más onda 😎
+
+## Polígono de frecuencia
+
+Los polígonos de frecuencia son una capa adicional que se puede agregar a los histogramas para añadir más información sobre la distribución.
+
+Un detalle a tener en cuenta es que la cantidad de `bins` tiene que ser idéntica a la del histograma
+
+```{r poli}
+# Histograma con Polígono de Frecuencias
+ggplot(sueldos, aes(x = sueldo_bruto)) +
+  geom_histogram(bins = 20) +                 # Modificamos la cantidad de grupos del histograma
+    geom_freqpoly(aes(sueldo_bruto),          # Añadimos el polígono de frecuencia
+                bins = 20) +
+  labs(title = "Histograma de Sueldo Bruto",  # Agrega titulo y subtítulo
+       subtitle = "bins = 20") 
+
+```
+
+## Series de tiempo
+
+Para esto usaremos una muestra de los datos de ingreso del dataframe `plantel` para ver la cantidad de personas contratradas por años desde el 2011 en adelante
+
+```{r st}
+# Creamos un nuevo dataframe filtrando los ingresos posteriores al 2010
+ingresos <- plantel %>% 
+  filter(year(fecha_ingreso) > 2010)
+
+# Contamos la cantidad de ingresos por año
+ingresos <- ingresos %>% 
+  count(anio_ingreso)
+
+# Veamos los resultados
+ingresos
+```
+
+Con estos datos, ahora podemos hacer nuestro gráfico:
+
+```{r st2}
+ggplot(ingresos, aes(x = anio_ingreso, y = n)) +
+  geom_line()
+```
+
+## Gráficos de torta
+
+Los gráficos de torta no son tan sencillos de hacer en R. En esencia lo que tenemos que hacer es un gráfico de barras apilado al 100% y luego doblarlo para hacer el gráfico de torta o de dona.
+
+Cuando tienen pocas categorías (no más de 4 o 5 a lo sumo), los gráficos de torta son muy fáciles de interpretar.
+
+Vamos a graficar de la Encuesta KIWI, cuántos participantes fueron a universidades públicas, privadas, y cuántos no fueron a la universidad. Primero creamos el dataframe
+
+```{r pie1}
+educ <- kiwi %>% 
+  select(tipo_universidad) %>%    # Seleccionamos la columna tipo universidad
+  group_by(tipo_universidad) %>%  # Agrupamos los resultados
+  summarise (n = n()) %>%         # Contamos la cantidad de casos para cada grupo
+  mutate(freq = n/sum(n)) %>%     # Creamos una columna nueva calculando la frecuencia relativa
+  arrange(-n)                     # Ordenamos los resultados de mayor a menor
+
+educ
+```
+
+Luego hay que computar los valores mínimos y máximos de cada rectángulo (recuerden que primero tenemos que hacer una barra.
+
+```{r pie2}
+# Calcular los porcentajes acumulados (tope de cada rectángulo)
+educ$ymax <- cumsum(educ$freq)
+
+# Calcula el límite inferior
+educ$ymin <- c(0, head(educ$ymax, n=-1))
+
+educ
+```
+
+Y ahora podemos hacer el gráfico. Este es el gráfico que tenemos que "doblar".
+
+```{r pie3}
+ggplot(educ, aes(ymax=ymax, ymin=ymin, xmax=4, xmin=3, fill=tipo_universidad)) +
+  geom_rect()
+```
+
+Y ahora sí, podemos hacer el gráfico de dona.
+
+![](https://miro.medium.com/max/900/1*6JHx7caXdrL1SQ9mI3KRuA.jpeg){width="291"}
+
+```{r pie4}
+# Hacemos el gráfico
+ggplot(educ, aes(ymax=ymax, ymin=ymin, xmax=4, xmin=3, fill=tipo_universidad)) +
+  geom_rect() +
+  coord_polar(theta="y") + # Elimina esta línea de código para entender lo que hace R.
+  xlim(c(2, 4)) + # Prueben eliminando esta línea de código para hacer un gráfico de torta
+  theme_void() +                             # Cambia estética del gráfico
+  theme(legend.position = "left",            # Cambia la posición de la leyenda
+        plot.title.position = "plot") +      # Cambia la posición del título  
+  labs(title = "Tipo de Universidad",
+       fill = "Tipo de Universidad")
+```
+
+### Más información
+
+El capítulo 2 del libro [Un Recorrido por los Métodos Cuantitativos en Ciencias Sociales a bordo de R](https://estadisticacienciassocialesr.rbind.io/distribuciones-de-frecuencia.html#tablas-univariadas) de Eduardo Bologna habla sobre **frecuencias**.
+
+Para el tema de limpieza de datos, tenemos una [introducción a tidyverse](https://youtu.be/-AXzusX4Cmo) que hicimos en el Club de R.
+
+Sobre visualización de datos tenemos el siguiente contenido:
+
+[Introducción a ggplot2](https://youtu.be/IdJ1UuEcCV8)
+
+[Estética de visualización](https://youtu.be/Z2cGkNh1mVM)
+
+[Microaprendizajes](https://youtu.be/lntmPdo8nbk) (pequeños tips sobre visualización de datos y otras cosas más).
+
+Algunos documentos complementarios:
+
+[Introducción a R](https://docs.google.com/document/d/1KCcrMDdEhp-4tw036DiNZqUGxMdBqztJ4Bfihqf4QUw/edit?usp=sharing)
+
+[Introducción a ggplot2](https://docs.google.com/document/d/1JAthc42Hno3tIhvZRrjA02zRCdS8q2uixODCBaZcPJ0/edit?usp=sharing)

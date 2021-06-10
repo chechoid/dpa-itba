@@ -9,6 +9,16 @@ library(summarytools)
 
 options(scipen = 999)
 
+azul <- "#344D7E"
+verde <-  "#4A9FC7"
+rosa1 <- "#B95192"
+rosa2 <- "#EE5777"
+naranja <- "#FF764C"
+amarillo <- "#FFA600"
+gris <- "#75838F"
+lila <- "#755395"
+rojo <- "#943126"
+
 # Carga de datos --------------------
 
 # Un listado de empleados
@@ -42,9 +52,11 @@ kiwi %>%
 str(plantel)
 
 plantel <- plantel %>% 
-  mutate(fecha_ingreso = date(fecha_ingreso),
-         anio_ingreso = year(floor_date(fecha_ingreso)),
+  mutate(anio_ingreso = year(floor_date(fecha_ingreso, unit = "year")),
          q_ingreso = quarter(fecha_ingreso))
+
+plantel$anioq_ingreso <- paste(plantel$anio_ingreso, plantel$q_ingreso, sep = "-")
+
 
 # Creamos una columna con las generaciones a la que pertenecen los empleados
 # Fuente: https://www.mckinsey.com/industries/consumer-packaged-goods/our-insights/true-gen-generation-z-and-its-implications-for-companies#
@@ -64,7 +76,6 @@ plantel %>%
   count(anio_ingreso, q_ingreso) %>% 
   arrange()
 
-plantel$anioq_ingreso <- paste(plantel$anio_ingreso, plantel$q_ingreso, sep = "-")
 
 plantel %>% 
   filter(anio_ingreso > 2015) %>% 
@@ -148,6 +159,42 @@ ingresos <- plantel %>%
 ingresos <- ingresos %>% 
   count(anio_ingreso)
 
+gt(ingresos)
+
 ggplot(ingresos, aes(x = anio_ingreso, y = n)) +
   geom_line() 
 
+
+# Gráfico de torta
+
+educ <- kiwi %>% 
+  select(tipo_universidad) %>%  
+  group_by(tipo_universidad) %>% 
+  summarise (n = n()) %>% 
+  mutate(freq = n/sum(n)) %>% 
+  arrange(-n)
+
+# Compute the cumulative percentages (top of each rectangle)
+educ$ymax <- cumsum(educ$freq)
+
+# Compute the bottom of each rectangle
+educ$ymin <- c(0, head(educ$ymax, n=-1))
+
+# Compute label position
+educ$labelPosition <- (educ$ymax + educ$ymin) / 2
+
+# Compute a good label
+educ$label <- paste0(educ$tipo_universidad, "\n Cant: ", educ$n)
+
+# Make the plot
+ggplot(educ, aes(ymax=ymax, ymin=ymin, xmax=4, xmin=3, fill=tipo_universidad)) +
+  geom_rect() +
+  coord_polar(theta="y") + # Try to remove that to understand how the chart is built initially
+  xlim(c(2, 4)) +# Try to remove that to see how to make a pie chart
+  scale_fill_manual(values = c(gris, verde, azul)) +
+  theme_void() +
+  theme(legend.position = "right",
+        panel.background = element_blank(),
+        plot.title.position = "plot") +
+  labs(title = "Tipo de Universidad",
+       fill = "Tipo de Universidad")

@@ -5,7 +5,7 @@ date: "11/6/2021"
 output: 
   html_document:
     theme: spacelab
-    highlight: kate
+    highlight: textmate
     toc: true
     toc_float: true
     code_download: true
@@ -16,10 +16,11 @@ output:
 knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE)
 ```
 
+![](archivos/stats.png){width="421"}
 
-# Introducción 
+# Introducción
 
-Este es un documento de `RMarkdown` que contiene código de R y que les permitirá además copiar y pegar el código en sus *scripts*.
+Este es un documento de `RMarkdown` que contiene código de R y que les permitirá además copiar y pegar el código en sus *scripts* para poner en práctica los conceptos de estadística.
 
 También pueden extraer el código de este archivo, guardando el archivo `.Rmd` en la carpeta del proyecto y corriendo esta línea de código en su consola.
 
@@ -39,16 +40,78 @@ install.packages("summarytools") # Medidas de análisis estadístico
 install.packages("lubridate")     # Manipulación de fechas
 ```
 
-
 Luego, para utilizar las funciones de los paquetes que acabamos de instalar, necesitamos *"activar"* el paquete con la función `library()`.
 
 ```{r librerías}
-library(readxl)       
-library(tidyverse)    
-library(funModeling)  
-library(summarytools)
+library(readxl)
+library(tidyverse)
+library(funModeling)
 library(lubridate)
+library(summarytools)
 ```
 
+# Carga de Datos
+
+Vamos a utilizar dos archivos para trabajar. Uno llamado `plantel.xlsx` que es un listado de empleados, y el archivo `kiwi.csv` que contiene respuestas a la Encuesta KIWI de Sueldos de RRHH realizada por el Club de R para RRHH durante 2020.
+
+> KIWI es un acrónimo de Key Investigation of Wages and Incomes.
+
+```{r carga-datos}
+# Carga de datos --------------------
+
+# Un listado de empleados
+plantel <- read_xlsx("datos/plantel.xlsx")
+
+# Encuesta de Sueldos de RH 2020
+kiwi <- read_delim("datos/kiwi_rh.csv", delim = ",") %>% 
+  filter(pais == "Argentina")
+```
+
+## Limpieza y preparación de datos
+
+Empezaremos añadiendo algunas columnas adicionales al archivo `plantel.xlsx` en función de los campos `fecha_ingreso` y `fecha_nacimiento`.
+
+```{r clean1}
+plantel <- plantel %>% 
+  mutate(anio_ingreso = year(fecha_ingreso),  # Extrae el año de la fecha ingreso
+         q_ingreso = quarter(fecha_ingreso))  # Columna nueva con el trimestre
 
 
+# Creamos una nueva columna uniendo las nuevas columnas que acabamos de crear
+plantel$anioq_ingreso <- paste(plantel$anio_ingreso, plantel$q_ingreso, sep = "-")
+
+
+# Creamos una columna con las generaciones a la que pertenecen los empleados
+# Fuente: https://www.mckinsey.com/industries/consumer-packaged-goods/our-insights/true-gen-generation-z-and-its-implications-for-companies#
+plantel <- plantel %>% 
+  mutate(anio_nacimiento = year(fecha_nacimiento),
+         generacion = case_when(
+           anio_nacimiento <= 1959 ~ "Baby Boomer",
+           anio_nacimiento <= 1979 ~ "Gen X",
+           anio_nacimiento <= 1994 ~ "Gen Y",
+           anio_nacimiento = TRUE  ~ "Gen Z"
+  )) %>% 
+  select(-anio_nacimiento) # Elimina la columna anio_nacimiento
+```
+
+# Distribución de Frecuencias
+
+## Datos categóricos o cualitativos
+
+Calcular las frecuencias de una variable significa contar la cantidad de veces que aparece un valor de una variable.
+
+Por ejemplo, del data frame `plantel` calculemos la cantidad de empleados por *Nivel de Contribución*.
+
+```{r freq1}
+plantel %>% 
+  count(nivel_contribucion, sort = T)
+```
+
+Del data frame `kiwi` podemos calcular la cantidad de casos que permitían tomar mate en la oficina y los que no.
+
+```{r freq2}
+# Contar las empresas donde se podía tomar mate en la oficina
+kiwi %>% 
+  filter(!is.na(mate)) %>% # Filtra las respuestas no nulas
+  count(mate)
+```

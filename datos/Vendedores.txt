@@ -1,0 +1,11 @@
+Nombre	Llam	Ventas
+Prandtl	20 	30
+Nusselt	40 	60
+Grashof	20 	40
+Euler 	30 	60
+Fourier	10 	30
+Mach	10 	40
+Laplace	20 	40
+Kiel 	20 	50
+Lassie 	20 	30
+Weber	30 	70

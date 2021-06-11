@@ -28,6 +28,7 @@ plantel <- read_xlsx("datos/plantel.xlsx")
 kiwi <- read_delim("datos/kiwi_rh.csv", delim = ",") %>% 
   filter(pais == "Argentina")
 
+
 # kiwi = Key Investigation of Wages and Incomes 
 
 # Análisis exploratorio -------------
@@ -38,21 +39,28 @@ kiwi <- read_delim("datos/kiwi_rh.csv", delim = ",") %>%
 
 plantel$nivel_contribucion
 
-plantel %>% 
-  count(nivel_contribucion, sort = T)
+
+plantel %>% # Ctrl + M
+  count(nivel_contribucion, sort = TRUE) %>% 
+  freq(report.nas = F)
 
 # Contar las empresas donde se podía tomar mate en la oficina
 kiwi %>% 
   filter(!is.na(mate)) %>% 
-  count(mate)
+  count(mate) %>% 
+  mutate(porcentaje = n/sum(n))
 
 
 # Creamos una columna para extraer el año de las columnas de fechas
 
 str(plantel)
+summary(plantel)
+
+
+
 
 plantel <- plantel %>% 
-  mutate(anio_ingreso = year(floor_date(fecha_ingreso, unit = "year")),
+  mutate(anio_ingreso = year(fecha_ingreso),
          q_ingreso = quarter(fecha_ingreso))
 
 plantel$anioq_ingreso <- paste(plantel$anio_ingreso, plantel$q_ingreso, sep = "-")
@@ -72,7 +80,7 @@ plantel <- plantel %>%
 
 # Distribución de frecuencias
 plantel %>% 
-  filter(anio_ingreso > 2015) %>% 
+  filter(anio_ingreso > 2018) %>% 
   count(anioq_ingreso) %>% 
   arrange()
 
@@ -95,6 +103,8 @@ contactos$contactos_linkedin
 ggplot(contactos, aes(x = contactos_linkedin)) + 
   geom_histogram()
 
+contactos
+
 # Creamos una columna nueva para asignar los grupos
 contactos$grupo <- cut(contactos$contactos_linkedin, 
                        breaks = 5) # Crea 5 grupos
@@ -103,6 +113,23 @@ summary(contactos)
 
 freq(contactos$grupo,
      report.nas = FALSE)
+
+
+
+contactos_2 <- contactos %>% 
+  mutate(rango_contactos = case_when(          # Para crear categorías según el valor
+    contactos_linkedin < 500   ~ "Hasta 500",          # Grupo 1
+    contactos_linkedin < 2500  ~ "Entre 500 y 2500",   # Grupo 2
+    contactos_linkedin < 5000  ~ "Entre 2500 y 5000",  # Grupo 3
+    contactos_linkedin < 10000 ~ "Entre 5000 y 10000", # Grupo 4
+    contactos_linkedin = T ~ "Más de 10000"            # Grupo 5
+  ),
+  rango_contactos = factor(rango_contactos, 
+                           levels = c("Hasta 500", "Entre 500 y 2500",
+                                      "Entre 2500 y 5000", "Entre 5000 y 10000",
+                                      "Más de 10000"))) # Este es un paso necesario para que los grupos queden mejor ordenados.
+freq(contactos_2$rango_contactos,
+     report.nas = F)
 
 
 # Gráfico de barras

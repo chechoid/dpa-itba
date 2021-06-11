@@ -124,7 +124,7 @@ Utilizando nuevamente el data frame `plantel` analicemos la cantidad de contrata
 
 ```{r freq-cuant-no-a}
 plantel %>%                           # Llama el dataframe 
-  filter(anio_ingreso > 2015) %>%     # Filtra los ingresos posteriores al 2015
+  filter(anio_ingreso > 2018) %>%     # Filtra los ingresos posteriores al 2015
   count(anioq_ingreso)                # Cuenta la cantidad de ingresos por año y trimestre
 ```
 
@@ -140,7 +140,7 @@ Para obtener estos resultados de manera simple, utilizaremos la función `freq()
 
 ```{r freq-cuant-no-a2}
 plantel %>% 
-  filter(anio_ingreso > 2015) %>%   # Filtramos los ingresos posteriores a 2015
+  filter(anio_ingreso > 2018) %>%   # Filtramos los ingresos posteriores a 2015
   select(anioq_ingreso) %>%         # Seleccionamos la columna de trimestres
   freq(report.nas = FALSE)          # Calculamos las frecuencias omitiendo los NA
 ```

@@ -1,5 +1,5 @@
 ---
-title: "SOPA 1"
+title: "PEPA Día 1 - Clase 1"
 author: "Arturo De Zan | Sergio Garcia Mora"
 date: "11/6/2021"
 output: 
@@ -26,7 +26,7 @@ Este es un documento de `RMarkdown` que contiene código de R y que les permitir
 También pueden extraer el código de este archivo, guardando el archivo `.Rmd` en la carpeta del proyecto y corriendo esta línea de código en su consola.
 
 ```{r intro1, eval=FALSE}
-knitr::purl("sopa_1.Rmd")
+knitr::purl("pepa_1.Rmd")
 ```
 
 ## Paquetes o librerías

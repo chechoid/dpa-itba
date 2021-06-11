@@ -38,7 +38,7 @@ Nuevamente, utilizaremos las mismas fuentes de datos que en el módulo anterior:
 
 ```{r datos}
 plantel <- read_excel("datos/plantel.xlsx")
-kiwi <- read_csv("datos/kiwi_rh.csv")
+kiwi <- read_csv("datos/kiwi_rh.csv") %>% filter(pais == "Argentina")
 ```
 
 ```{r cleaning}
@@ -63,6 +63,23 @@ plantel <- plantel %>%
            anio_nacimiento = TRUE  ~ "Gen Z"
   )) %>% 
   select(-anio_nacimiento) # Elimina la columna anio_nacimiento
+
+
+# Limpieza sueldos Encuesta KIWI
+# Creamos un objeto con los resultados de la función
+limpieza <- profiling_num(kiwi$sueldo_bruto)
+
+# Creo objetos almacenando los valores de los percentiles 5 y 95
+p05 <- limpieza[1,6]
+p95 <- limpieza[1,10]
+
+# Creo un nuevo data frame llamado 'sueldos'
+sueldos <- kiwi %>% 
+  filter(tipo_contratacion != "Part time",  # Filtro los que no sean Part time
+         between(sueldo_bruto,              # Variable a filtrar con 'between'
+                 p05,                       # Filtro inferior
+                 p95))                      # Filtro superior
+
 ```
 
 ## Población y muestra
@@ -99,7 +116,7 @@ plantel %>%
 
 ![](https://i.ytimg.com/vi/NLt3gFeYX3c/hqdefault.jpg){width="347"}
 
-El **promedio** es una medida de tendencia central 🤯 con el que todas y todos estamos bastante familiarizadas y familiarizados. Es una métrica muy útil porque todo el que cursó una materia en el colegio sabe como se calcula, y qué significa su resultado.
+El **promedio** o **media muestral** es una medida de tendencia central 🤯 con el que todas y todos estamos bastante familiarizadas y familiarizados. Es una métrica muy útil porque todo el que cursó una materia en el colegio sabe como se calcula, y qué significa su resultado.
 
 > El promedio es el valor más representativo de un conjunto de datos... (ponele)...
 
@@ -141,7 +158,7 @@ ggplot(edades, aes(x = Edad, y = Inicial, label = Inicial))+
 
 ![](https://i.blogs.es/a7f35e/1366_2000/1366_521.jpg){width="324"}
 
-Así como el promedio es una medida de *tendencia central*, la **mediana** y los **cuartiles** son medidas **de orden**. Lo que hacen estas medidas es ordenar los datos de mayor a menor, y nos indican cuál es el valor que está en:
+Así como el promedio es una medida de *tendencia central*, al igual que la **mediana.** Los **cuartiles** son medidas **de orden** (por ende los *cuantiles o percentiles* también lo son). Lo que hacen estas medidas es ordenar los datos de mayor a menor, y nos indican cuál es el valor que está en:
 
 -   El valor correspondiente al 25% de los datos: **Primer cuartil**
 
@@ -157,4 +174,159 @@ mediana <- median(kiwi$sueldo_bruto)
 mediana
 ```
 
-Ya exploraremos otras propiedades y características del promedio y la mediana. Ahora vamos a ver otra medida, la **moda**.
+También podemos calcular manualmente los valores de los percentiles con la función `quantile()`. Por ejemplo, calculemos el percentil 20.
+
+```{r}
+quantile(kiwi$sueldo_bruto, 0.2)
+```
+
+Si queremos ver los valores de los **quintiles** (los valores que dividen al dataset en 5 partes), la forma de hacerlo es la siguiente:
+
+```{r}
+quantile(kiwi$sueldo_bruto, c(0.2, 0.4, 0.6, 0.8))
+```
+
+Ya exploraremos otras propiedades y características del promedio y la mediana. Ahora vamos a ver otra medida, la **moda** 💅.
+
+## Moda
+
+La **moda** es una medida que muestra el valor que mayor cantidad de veces se repite. Por ejemplo, en nuestro archivo de `plantel` podemos buscar cuál es el valor de edad que más se repite.
+
+```{r moda1}
+ggplot(plantel, aes(x = edad)) +
+  geom_bar()
+```
+
+```{r}
+plantel %>% 
+  count(edad, sort = T) %>% 
+  head()
+```
+
+Como podemos apreciar en las salidas anteriores vemos que el número 31 es el que **más veces se repite**, por eso no hay que confundir *moda* con *promedio*. El único caso en que pueden tener el mismo valor es cuando la distribución de los datos es normal.
+
+La moda también la podemos calcular sobre *variables categóricas*. Usando la Encuesta KIWI fijémonos cuál es el ERP más utilizado en RH.
+
+```{r moda2}
+kiwi %>%
+  filter(erp != "No tenemos sistema de gestión") %>% 
+  count(erp, sort = T) %>% 
+  head()
+```
+
+Así que podemos apreciar que el valor que más se repite es el de *SAP / SuccessFactors*.
+
+## Características y particularidades de estas tres medidas
+
+### Sensibilidad a valores extremos
+
+Como sabemos, el promedio (o media), a diferencia de lo que sucede con la mediana y la moda, es sensible a los valores extremos. Por ejemplo, miremos los valores de resumen de los sueldos de la Encuesta KIWI:
+
+```{r propiedades1}
+summary(kiwi$sueldo_bruto)
+```
+
+La función `summary()` nos permite ver rápidamente:
+
+-   Los valores **mínimo** y **máximo**.
+
+-   El **primer** y **tercer cuartil**.
+
+-   La **mediana** (median).
+
+-   El **promedio** (mean).
+
+En la salida anterior podemos ver que tenemos un sueldo muy alto, (\$ 2.140.000) que como vimos en el módulo anterior, es un valor muuuuy atípico. Presten atención al promedio (90.638), y la mediana (72.000).
+
+Comparemos los resultados cuando *podamos* los valores por encima y por debajo de los percentiles 5 y 95.
+
+```{r propiedades2}
+summary(sueldos$sueldo_bruto)
+```
+
+Ahora, con los valores "podados" podemos ver que el promedio ahora es de \$ 82.422 (una diferencia cercana al 10%). Mientras que la diferencia entre las medianas la diferencia es sólo de 1%.
+
+### Suma y multiplicación de constantes
+
+Si la misma constante se suma a cada valor del data set, el promedio va a incrementarse por el mismo valor de la constante.
+
+Por ejemplo, tomemos las edades del dataset `edades`.
+
+```{r propiedades3}
+edades <- edades$Edad
+
+# Estos son los valores
+edades
+```
+
+Calculemos el promedio de edad:
+
+```{r propiedades4}
+# Si ponemos todo el código entre paréntisis R crea el objeto y muestra el resultado
+(promedio <- mean(edades))
+```
+
+Ahora sumemos al vector `edades` un número al azar, por ejemplo, 15.
+
+```{r propiedades5}
+edades_2 <- edades + 15
+
+edades_2
+```
+
+¿Qué pasará con el promedio? Veamos.
+
+```{r propiedades 6}
+mean(edades_2)
+```
+
+Vemos que el nuevo promedio es justamente igual al promedio original más la constante.
+
+# Medidas de forma
+
+Tomemos la Encuesta KIWI y usemos la columna `anios_en_puesto` que nos dice la cantidad de años de experiencia en el puesto.
+
+```{r}
+hist(kiwi$anios_en_puesto, main = "Asimetría positiva o hacia la derecha")
+```
+
+Veamos qué valores nos arroja la función `summary`
+
+```{r}
+summary(kiwi$anios_en_puesto)
+
+```
+
+Y veamos cual es el valor más frecuente:
+
+```{r}
+kiwi %>% 
+  count(anios_en_puesto, sort = T) %>% 
+  head(1)
+```
+
+En este caso podemos ver que la respuesta más frecuente es 2 años de experiencia.
+
+Otra variable interesante de la Encuesta KIWI es el nivel de satisfacción con la empresa. Hagamos un gráfico de barras
+
+```{r}
+satisf <- kiwi %>% 
+  filter(!is.na(satisfaccion)) %>% 
+  select(satisfaccion)
+
+ggplot(satisf, aes(x = satisfaccion)) +
+  geom_bar() +
+  ggtitle("Asimetría negativa o hacia la izquierda")
+
+
+```
+
+Eduardo Bologna nos aporta la siguiente definición: *La asimetría puede evaluarse directamente a partir de las medidas de centralidad, ya que la posición relativa de la media y la mediana indican hacia dónde ésta sucede. Cuando la **media y la mediana coinciden**, la distribución es simétrica, es decir carece de asimetría. Si la **media supera a la mediana**, se trata de una distribución asimétrica a la derecha y si la **media es menor que la mediana**, la asimetría será hacia la izquierda*[^1]. Pasando en limpio:
+
+[^1]: Bologna, E. Un recorrido por los métodos cuantitativos en Ciencias Sociales a bordo de R. <https://estadisticacienciassocialesr.rbind.io/la-expresi%C3%B3n-resumida-de-la-informaci%C3%B3n.html#la-forma-de-la-distribuci%C3%B3n>
+
+-   Cuando la media (promedio) es igual a la mediana: la distribución es simétrica.
+
+-   Cuando la media es mayor que la mediana, la asimetría es positiva o hacia la derecha.
+
+-   Cuando la media es menor que la mediana, la asimetría es negativa o hacia la izquierda.

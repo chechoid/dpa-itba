@@ -1,0 +1,67 @@
+---
+title: "PEPA"
+subtitle: "Pensamiento Estadístico en People Analytics"
+author: "Arturo De Zan | Sergio Garcia Mora"
+output: learnr::tutorial
+runtime: shiny_prerendered
+---
+
+```{r setup, include=FALSE}
+library(learnr)
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+# PEPA
+
+![](https://youtu.be/Mz4GbMCqvcY){width="80%"}
+
+Este es un tutorial interactivo que diseñamos para simplificar la práctica y afirmar los conocimientos vistos en las clases de **PEPA** (**P**enstamiento **E**stadístico en **P**eople **A**nalytics) y pensado para simplificar lo más posible los ejercicios sin que requiera tanto de vos escribiendo código.
+
+Los scripts que usaremos en este documento los podés copiar y pegar para reutilizarlos en tu propia PC. Recordá que tenés estos recursos a disposición:
+
+-   [Mapa conceptual](https://miro.com/app/board/o9J_l_mwKFM=/) de R y RStudio con sus respectivos videos explicativos.
+-   [Tutorial interactivo de Introducción a R](https://chechoid.shinyapps.io/clase_1_introduccion_r_y_tidyverse/)
+-   Todo el material del [Club de R para RRHH](https://drive.google.com/drive/folders/1Qck3z_t6XLRXb2vbN-00931DgdJZ0yse?usp=sharing) en Google Drive. Cada carpeta de cada mes, tiene un link a su respectivo video en Youtube. Y acá hay contenido introductorio, hasta cosas más complejas como análisis predictivos, text mining o análisis de clusters por ejemplo.
+
+### ¿Cómo usar este tutorial?
+
+Este tutorial va a tener distintas secciones, en las cuales vas a poder correr los resultados directamente aprentando el ícono que dice **"Run Code"**.
+
+Por ejemplo, probá sumar 2 + 2 y hacer click en **"Run Code"**.
+
+```{r two-plus-two, exercise=TRUE}
+
+```
+
+El código también corre con las teclas *Ctrl+Enter.*
+
+En cada ejercicio vas a poder encontrar pistas en la tecla **"Hint"**. Calculá tu edad en el siguiente script:
+
+```{r edad, exercise=TRUE, exercise.lines = 9}
+# Poné el año en el que naciste
+anio_nacimiento <- ____
+anio_actual <- 2021
+
+# Calculá tu edad
+edad <- _______ - ________
+
+# Visualizá los resultados
+edad
+```
+
+```{r edad-hint-1}
+# Reemplazá las líneas ____ por el año en el que naciste
+# Para calcular tu edad restá el año actual menos tu año de nacimiento
+```
+
+```{r edad-hint-2}
+# Poné el año en el que naciste
+anio_nacimiento <- 1979
+anio_actual <- 2021
+
+# Calculá tu edad
+edad <- anio_actual - anio_nacimiento
+
+# Visualizá los resultados
+edad
+```

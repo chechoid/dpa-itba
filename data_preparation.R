@@ -94,7 +94,16 @@ satisfaccion <- kiwi_ar %>%
   filter(rubro != "Otros", 
          !is.na(satisfaccion))
 
+analistas <- kiwi_ar %>% 
+  filter(puesto == "Analista")
+
 # Guardar archivos
 saveRDS(kiwi_ar, file = "kiwi_ar.RDS")
 write_delim(kiwi_ar, file = "kiwi_ar.csv", delim = ";")
 saveRDS(satisfaccion, file = "satisfaccion.RDS")
+saveRDS(analistas, file = "analistas.RDS")
+
+
+# Testeando pie charts
+table(kiwi_ar$puesto)
+

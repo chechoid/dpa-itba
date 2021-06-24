@@ -5,9 +5,9 @@ account: chechoid
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 4315899
-bundleId: 4752870
+bundleId: 4753404
 url: https://chechoid.shinyapps.io/PEPA/
-when: 1624562871.90389
-lastSyncTime: 1624562871.90389
+when: 1624573272.12405
+lastSyncTime: 1624573272.12405
 asMultiple: FALSE
 asStatic: FALSE

@@ -86,6 +86,15 @@ kiwi_ar <- kiwi_ar %>%
   mutate(puesto = factor(puesto, levels = c("Administrativo", "Analista", "HRBP",
                                             "Responsable", "Jefe", "Gerente")))
 
+kiwi_ar <- kiwi_ar %>% 
+  mutate(rangos_aumentos = case_when(
+    ajuste_porcentaje == 0  ~ "Sin aumentos",
+    ajuste_porcentaje <= 10 ~ "Entre 1 y 10",
+    ajuste_porcentaje <= 20 ~ "Entre 11 y 20",
+    ajuste_porcentaje > 30  ~ "Entre 21 y 30",
+    ajuste_porcentaje = TRUE ~ "Más de 30"
+  ),
+  rangos_aumentos = factor(rangos_aumentos, levels = c("Sin aumentos", "Entre 1 y 10", "Entre 11 y 20", "Entre 21 y 30", "Más de 30")))
 
 ```
 
@@ -99,9 +108,9 @@ str(kiwi_ar)
 ```{r str-q, }
 quiz(
   question("¿Cuántas filas y columnas tiene el dataframe 'salarios'?",
-  answer("548 columnas y 43 variables", message = "Las observaciones son las filas y las variables son las columnas"),
-  answer("548 variables y 43 filas", message = "Mirá de nuevo el resultado de la estructura del dataframe salarios. Primero indica las observaciones, y luego las variables"),
-  answer("548 filas y 43 columnas", correct = TRUE, message = "Muy bien!"),
+  answer("548 columnas y 44 variables", message = "Las observaciones son las filas y las variables son las columnas. Columna es sinónimo de variable en este contexto."),
+  answer("548 variables y 44 filas", message = "Mirá de nuevo la primera fila del resultado de la estructura del dataframe kiwi_ar. Primero indica las observaciones, y luego las variables"),
+  answer("548 filas y 44 columnas", correct = TRUE, message = "Muy bien!"),
   submit_button = "Enviar respuesta",
   try_again_button = "Intenta de nuevo",
   allow_retry = TRUE
@@ -140,7 +149,7 @@ En ocasiones, algo que permite hacer más claras las interpretaciones de los res
 
 ```{r cate-2, exercise=TRUE}
 # Tidyverse ya está cargado
-library(scales)
+library(scales) # Es para usar la función percent() a continuación  
 
 # Hace click en "Run Code"
 kiwi_ar %>% 
@@ -202,6 +211,8 @@ kiwi_ar %>%
 kiwi_ar %>% 
   count(mate)
 ```
+
+![](https://i.pinimg.com/736x/37/55/13/3755137bec08eab75fa7351696803b53.jpg){width="287"}
 
 ¿Y qué porcentaje representan de las respuestas? Agrega una columna calculando el porcentaje (frecuencia relativa).
 
@@ -293,7 +304,7 @@ ggplot(kiwi_ar,             # Primero indicamos el nombre del dataframe
 ```{r catev-4}
 quiz(
   question("¿Qué pasa si asignamos la variable puesto al eje y?",
-           answer("Nada", message = "Algo pasa, probá"),
+           answer("Nada", message = "No pasa nada grave pero algo pasa, probá reemplazando x por y en el bloque de código anterior"),
            answer("Le agarra un virus a la compu y aparezco en la lista de los más buscados por la Interpol", message = "Les dije 1 millón de veces que no sean exagerados"),
            answer("El gráfico 'se da vuelta'", correct = TRUE, message = "Correcto! Los nombres de los puestos aparecen en el eje y (más legibles de hecho) y las barras están apaisadas"),
          submit_button = "Enviar respuesta",
@@ -369,3 +380,66 @@ ggplot(puestos, aes(ymax=ymax, ymin=ymin, xmax=4, xmin=3, fill=puesto)) +
        fill = "Puesto")
 
 ```
+
+## Trabajando con variables cuantitativas
+
+Con las variables numéricas, por otro lado podemos hacer análisis mucho más diversos que con las variables categóricas. Podemos hacer desde cálculos aritméticos (sumas, restas, multiplicaciones y divisiones) hasta *cálculos de resumen estadístico* (promedio, mediana, desvío estándar, etc.).
+
+Dado que las variables cuantitativas pueden a veces tomar valores infinitos, hacer un cálculo de frecuencias por los valores que tenemos puede ser difícil de interpretar.
+
+Veamos este ejemplo donde tomamos la variable `ajuste_porcentaje` que indica el valor porcentual de aumentos salariales recibidos durante 2020 (el relevamiento de datos se hizo en octubre).
+
+```{r num-1, exercise = TRUE}
+# Análisis cuantitativo no agrupado 
+kiwi_ar %>% 
+  count(ajuste_porcentaje)
+```
+
+Terminamos con una tabla con 68 filas que tiene niveles de detalles poco útiles (una respuesta detallando que el ajuste fue de `12.69%`, dos personos recibieron `12.8%` de aumento por ejemplo). Esto es lo que ocurre cuando tenemos **datos cuantitativos no agrupados**.
+
+En cambio, si armamos categorías, con rangos de aumentos, podemos terminar con algo mucho más informativo, y útil para analizar. A esto le llamaremos análisis de **datos cuantitativos agrupados.**
+
+```{r num-2, exercise=TRUE}
+kiwi_ar %>% 
+  select(rangos_aumentos) %>% 
+  freq(report.nas = FALSE)
+```
+
+## Análisis Univariado Variables Cuantitativas - Visualización
+
+Antes de meternos con las medidas de resumen estadístico, y aprovechando este último concepto de datos cuantitativos agrupados, vamos a plantear algunas posibles visualizaciones.
+
+Primero, realicemos un gráfico de barras sobre la variable `ajuste_porcentaje`.
+
+```{r num-3, exercise=TRUE}
+ggplot(kiwi_ar, aes(x = ajuste_porcentaje)) +
+  geom_bar()
+```
+
+Hay tantos valores posibles que muchas barras pasan desapercibidas. Probemos graficar los rangos de aumentos.
+
+```{r num-4, exercise=TRUE}
+ggplot(kiwi_ar, aes(x = rangos_aumentos)) +
+  geom_bar()
+```
+
+Esta forma de graficar una variable *cuantitativa* en categorías nos sirve para introducir un tipo de gráfico muy utilizado en Analytics, que es el **histograma**.
+
+A primera vista, el *histograma* parece un gráfico de barras, con la diferencia que la barra no representa un valor único (por ejemplo 5), sino un *rango de valores*. (por ejemplo, entre 5 y 10). Ergo, el alto de la barra va a estar dado por la cantidad de casos que caigan dentro de cada rango.
+
+![El arquitecto de Matrix diciendo Ergo](https://alchetron.com/cdn/architect-the-matrix-7af001d6-8db4-40d6-8e40-fbf29656e28-resize-750.jpeg ""Ergo"")
+
+De nuevo, hay varias formas de hacer un histograma en R. En R base la forma es la siguiente:
+
+```{r hist-1, exercise = TRUE}
+hist(kiwi_ar$ajuste_porcentaje)
+```
+
+Y en `ggplot2` la forma de hacerlo es la siguiente:
+
+```{r hist-2, exercise=TRUE}
+ggplot(kiwi_ar, aes(x = ajuste_porcentaje)) +
+  geom_histogram(bins = 15) # Ajusta la cantidad de barras que van a aparecer en el gráfico
+```
+
+Prueben distintas versiones del histograma cambiando la cantidad de `bins` o incluso borrando todo lo que está dentro del paréntesis de `geom_histogram()`.

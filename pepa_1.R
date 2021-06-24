@@ -218,3 +218,4 @@ ggplot(educ, aes(ymax=ymax, ymin=ymin, xmax=4, xmin=3, fill=tipo_universidad)) +
         plot.title.position = "plot") +
   labs(title = "Tipo de Universidad",
        fill = "Tipo de Universidad")
+

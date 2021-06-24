@@ -89,6 +89,16 @@ kiwi_ar <- kiwi_ar %>%
 kiwi_ar <- kiwi_ar %>% 
   mutate(es_lider = if_else(puesto %in% c("Responsable", "Jefe", "Gerente"),1,0))
 
+kiwi_ar <- kiwi_ar %>% 
+  mutate(rangos_aumentos = case_when(
+    ajuste_porcentaje == 0  ~ "Sin aumentos",
+    ajuste_porcentaje <= 10 ~ "Entre 1 y 10",
+    ajuste_porcentaje <= 20 ~ "Entre 11 y 20",
+    ajuste_porcentaje <= 30 ~ "Entre 21 y 30",
+    ajuste_porcentaje > 30  ~ "Más de 30"
+  ),
+  rangos_aumentos = factor(rangos_aumentos, levels = c("Sin aumentos", "Entre 1 y 10", "Entre 11 y 20", "Entre 21 y 30", "Más de 30")))
+
 satisfaccion <- kiwi_ar %>% 
   select(id, genero, puesto, rubro, satisfaccion) %>% 
   filter(rubro != "Otros", 
@@ -98,12 +108,14 @@ analistas <- kiwi_ar %>%
   filter(puesto == "Analista")
 
 # Guardar archivos
-saveRDS(kiwi_ar, file = "kiwi_ar.RDS")
-write_delim(kiwi_ar, file = "kiwi_ar.csv", delim = ";")
-saveRDS(satisfaccion, file = "satisfaccion.RDS")
-saveRDS(analistas, file = "analistas.RDS")
+saveRDS(kiwi_ar, file = "PEPA/kiwi_ar.RDS")
+write_delim(kiwi_ar, file = "PEPA/kiwi_ar.csv", delim = ";")
+saveRDS(satisfaccion, file = "PEPA/satisfaccion.RDS")
+saveRDS(analistas, file = "PEPA/analistas.RDS")
 
 
 # Testeando pie charts
 table(kiwi_ar$puesto)
 
+summary(kiwi_ar$ajuste_porcentaje)
+summary(kiwi_ar$rangos_aumentos)

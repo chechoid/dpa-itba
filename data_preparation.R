@@ -5,8 +5,9 @@ kiwi <- read_delim("datos/kiwi_rh.csv", delim = ",")
 glimpse(kiwi)
 
 kiwi_ar <- kiwi %>% 
-  filter(pais == "Argentina") %>% 
-  select(-pais, -sueldo_dolar, -multiplicador, -sueldo_ft, -tipo_cambio, -cuenta) %>% 
+  filter(pais == "Argentina", 
+         genero %in% c("Masculino", "Femenino")) %>% 
+  select(-pais, -sueldo_dolar, -multiplicador, -sueldo_ft, -tipo_cambio, -cuenta, -trabajo) %>% 
   filter(!tipo_contratacion %in% c("Part time", "Pasante"),
          puesto != "Pasante") 
 
@@ -88,7 +89,12 @@ kiwi_ar <- kiwi_ar %>%
 kiwi_ar <- kiwi_ar %>% 
   mutate(es_lider = if_else(puesto %in% c("Responsable", "Jefe", "Gerente"),1,0))
 
+satisfaccion <- kiwi_ar %>% 
+  select(id, genero, puesto, rubro, satisfaccion) %>% 
+  filter(rubro != "Otros", 
+         !is.na(satisfaccion))
+
 # Guardar archivos
 saveRDS(kiwi_ar, file = "kiwi_ar.RDS")
 write_delim(kiwi_ar, file = "kiwi_ar.csv", delim = ";")
-
+saveRDS(satisfaccion, file = "satisfaccion.RDS")

@@ -8,7 +8,7 @@ runtime: shiny_prerendered
 
 ```{r setup, include=FALSE}
 library(learnr)
-knitr::opts_chunk$set(echo = FALSE)
+knitr::opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE)
 ```
 
 # PEPA
@@ -64,4 +64,162 @@ edad <- anio_actual - anio_nacimiento
 
 # Visualizá los resultados
 edad
+```
+
+Para este tutorial vamos a utilizar el dataset de la **Encuesta KIWI de Sueldos LATAM** 🥝 que están almacenados en un objeto .`RDS` que es una extensión propia de R para almacenar datos y que mantiene las características de los datos. También hay una versión `.csv` en el [repositorio de esta clase](https://raw.githubusercontent.com/chechoid/dpa-itba/main/PEPA/kiwi_ar.csv).
+
+```{r carga-datos, echo=TRUE}
+# Cargamos los datos
+kiwi_ar <- readRDS("kiwi_ar.RDS")
+```
+
+### Explorando los datos
+
+Corré la siguiente línea de código y respondé la pregunta a continuación
+
+```{r str, exercise=TRUE}
+# Ver la estructura del data frame
+str(kiwi_ar)
+```
+
+```{r str-q, }
+quiz(
+  question("¿Cuántas filas y columnas tiene el dataframe 'salarios'?",
+  answer("548 columnas y 43 variables", message = "Las observaciones son las filas y las variables son las columnas"),
+  answer("548 variables y 43 filas", message = "Mirá de nuevo el resultado de la estructura del dataframe salarios. Primero indica las observaciones, y luego las variables"),
+  answer("548 filas y 43 columnas", correct = TRUE, message = "Muy bien!"),
+  submit_button = "Enviar respuesta",
+  try_again_button = "Intenta de nuevo",
+  allow_retry = TRUE
+))
+```
+
+# Análisis Univariado
+
+Con el **análisis univariado** lo que hacemos es analizar una variable a la vez. Dependiendo si la variable es *categórica* o *numérica* vamos a poder realizar distintas cálculos y análisis.
+
+```{r librerias}
+library(tidyverse)
+library(funModeling)
+library(summarytools)
+library(scales)
+```
+
+## Trabajando con variables categóricas
+
+Con las variables *categóricas,* ya sean *nominales* u *ordinales*, no podemos hacer calculos aritméticos como sumas, promedios y cosas por el estilo. ¿Qué podemos hacer? Por ejemplo contar casos.
+
+```{r cate-1, exercise=TRUE}
+library(tidyverse) # Limpieza y manipulación de datos
+
+kiwi_ar %>% 
+  count(puesto) # Cuenta la cantidad de casos por puesto
+```
+
+Contar casos de una variable, como en el ejemplo anterior que contamos la cantidad de respuestas recibidas para cada puesto, en estadística se llama **Distribución de Frecuencias**. ¿Por qué?
+
+![](https://cdn.memegenerator.es/imagenes/memes/full/29/80/29808033.jpg){width="300"}
+
+En realidad, debe haber un por qué, pero podremos sobrevivir sin saberlo.
+
+En ocasiones, algo que permite hacer más claras las interpretaciones de los resultados es agregar los porcentajes.
+
+```{r cate-2, exercise=TRUE}
+# Tidyverse ya está cargado
+
+# Hace click en "Run Code"
+kiwi_ar %>% 
+  count(puesto) %>% 
+  mutate(porcentaje = percent(n / sum(n))) # Toma el valor de la celda en n y lo divide por el total de la columna n
+```
+
+Al incorporar el porcentaje en el análisis lo que estamos haciendo es agregar, lo que en estadística se llama **Frecuencias Relativas.**
+
+En el data frame tenemos entonces tres posiciones, `Administrativo`, `Analista`, y `HRBP` que no son posiciones jerárquicas. ¿Qué porcentaje del total representan?
+
+Dados que los datos están ordenados por jerarquía (¿cómo se llaman estas variables?) podemos sumar el porcentaje de `Administrativo` al porcentaje de `Analista`, y ese total, sumarlo a `HRBP`. Usemos la función `freq()` del paquete `summarytools` para hacerlo fácilmente.
+
+```{r cate-3, exercise = TRUE}
+
+kiwi_ar %>% 
+  select(puesto) %>% 
+  freq(report.nas = FALSE)
+```
+
+Si vamos sumando los porcentajes de cada fila, *acumulándolos* (agregando primero `Administrativo` y `Analista` y siguiendo después con `HRBP` y así sucesivamente) lo que estamos haciendo es una **Distribución de Frecuencias Relativas Acumuladas**.
+
+Entonces, ¿qué porcentaje de las respuestas pertenecen a personas en puestos no jerárquicos?
+
+```{r cate-4}
+quiz(
+  question("¿Qué porcentaje de las respuestas son de personas en posiciones no jerárquicas (considerando Administrativos, Analistas y HRBP)?",
+           answer("10.40%", message = "Ese es el porcentaje de los HRBP"),
+           answer("56.39%", message = "Excelente!", correct = T),
+           answer("45.99%", message = "Esa es el porcentaje acumulado de Administrativo y Analista. Falta sumar el porcentaje de los HRBP."),
+           submit_button = "Enviar respuesta",
+           try_again_button = "Intenta de nuevo",
+           allow_retry = TRUE
+))
+```
+
+### Repaso
+
+-   **Distribución de frecuencias:** Que es el conteo de ingresos por trimestre.
+
+-   **Frecuencias relativas:** Que es el *porcentaje* que representa el conteo sobre el total.
+
+-   **Frecuencia relativas acumuladas:** Que representa el *porcentaje acumulado* de los ingresos de cada trimestre.
+
+### A practicar!
+
+¿Se puede tomar mate en todas las empresas? Veamos la cantidad de respuestas de la variable `mate` para ver en cuántos casos respondieron que sí se podía tomar, y cuántos respondieron que no. Reemplazá los espacios vacíos según corresponda al nombre de la función o de la variable.
+
+```{r cate-5}
+kiwi_ar %>% 
+  count(_____)
+```
+
+```{r cate-5-hint-1}
+# Reemplazá el espacio vacío dentro de la función count() con el nombre de la variable 'mate'
+```
+
+```{r cate-5-hint-2}
+kiwi_ar %>% 
+  count(mate)
+```
+
+¿Y qué porcentaje representan de las respuestas? Agrega una columna calculando el porcentaje (frecuencia relativa).
+
+```{r cate-6, exercise=TRUE, exercise.lines = 5}
+kiwi_ar %>% 
+  ______(____) %>% # Completá con la función y la variable que corresponde
+  mutate(porcentaje = n/sum(n)) # Agrega una columna con los porcentajes.
+```
+
+```{r cate-6-hint-1}
+# Usá la función count() para contar la cantidad de respuestas por cada caso
+# La variable que queremos analizar se llama 'mate'
+```
+
+```{r cate-6-hint-2}
+kiwi_ar %>% 
+  count(mate) %>% # Completá con la función y la variable que corresponde
+  mutate(porcentaje = n/sum(n)) # Agrega una columna con los porcentajes.
+```
+
+Calcular la distribución de frecuencias acumuladas según la `region`. Reemplazá los espacios vacíos según corresponda al nombre de la función o de la variable.
+
+```{r cate-7, exercise=TRUE, exercise.lines = 4}
+kiwi_ar %>% 
+  count(______)
+```
+
+```{r cate-7-hint-1}
+# Reemplazá el espacio vacío dentro de la función count() con el nombre de la variable 'region'
+```
+
+```{r cate-7-hint-2}
+kiwi_ar %>% 
+  select(region) %>% 
+  freq(report.nas = FALSE)
 ```

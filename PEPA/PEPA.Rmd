@@ -75,6 +75,20 @@ kiwi_ar <- readRDS("kiwi_ar.RDS")
 
 ### Explorando los datos
 
+```{r carga-datos2}
+library(readr)
+library(dplyr)
+
+kiwi_ar <- read_delim("kiwi_ar.csv", delim = ";")
+
+# Ordena los puestos por jerarquía
+kiwi_ar <- kiwi_ar %>% 
+  mutate(puesto = factor(puesto, levels = c("Administrativo", "Analista", "HRBP",
+                                            "Responsable", "Jefe", "Gerente")))
+
+
+```
+
 Corré la siguiente línea de código y respondé la pregunta a continuación
 
 ```{r str, exercise=TRUE}
@@ -126,6 +140,7 @@ En ocasiones, algo que permite hacer más claras las interpretaciones de los res
 
 ```{r cate-2, exercise=TRUE}
 # Tidyverse ya está cargado
+library(scales)
 
 # Hace click en "Run Code"
 kiwi_ar %>% 
@@ -288,6 +303,69 @@ quiz(
 )
 ```
 
-### Gráficos de torta
+### Gráficos de torta o de dona
 
 Para bien o para mal, los gráficos de torta no tienen un *geom* específico, y si bien en R base hay una función específica para hacerlos, requiere un poco de preprocesamiento previo.
+
+En esencia los pasos para hacer un buen gráfico de torta son los siguientes:
+
+1.  Preparar los datos para que las categorías queden ordenadas de mayor a menor según su frecuencia.
+
+2.  Hacer un gráfico apilado al 100%
+
+3.  "Doblar" el gráfico hasta que quede como un gráfico de torta o dona.
+
+Este sería un gráfico apilado al 100%
+
+```{r categ-5}
+# Preparación de los datos
+puestos <- kiwi_ar %>% 
+  select(puesto) %>%    # Seleccionamos la columna tipo universidad
+  group_by(puesto) %>%  # Agrupamos los resultados
+  summarise (n = n()) %>%         # Contamos la cantidad de casos para cada grupo
+  mutate(freq = n/sum(n)) %>%     # Creamos una columna nueva calculando la frecuencia relativa
+  arrange(-n)                     # Ordenamos los resultados de mayor a menor
+
+# Calcular los porcentajes acumulados (tope de cada rectángulo)
+puestos$ymax <- cumsum(puestos$freq)
+
+# Calcula el límite inferior
+puestos$ymin <- c(0, head(puestos$ymax, n=-1))
+
+ggplot(puestos, aes(ymax=ymax, ymin=ymin, xmax=4, xmin=3, fill=puesto)) +
+  geom_rect()
+```
+
+Y ahora lo tenemos que "doblar".
+
+![](https://miro.medium.com/max/900/1*6JHx7caXdrL1SQ9mI3KRuA.jpeg){width="291"})
+
+Los pasos para hacer un gráfico de dona son los siguientes:
+
+```{r pie-chart, echo=TRUE}
+# Preparación de los datos
+puestos <- kiwi_ar %>% 
+  select(puesto) %>%    # Seleccionamos la columna tipo universidad
+  group_by(puesto) %>%  # Agrupamos los resultados
+  summarise (n = n()) %>%         # Contamos la cantidad de casos para cada grupo
+  mutate(freq = n/sum(n)) %>%     # Creamos una columna nueva calculando la frecuencia relativa
+  arrange(-n)                     # Ordenamos los resultados de mayor a menor
+
+# Calcular los porcentajes acumulados (tope de cada rectángulo)
+puestos$ymax <- cumsum(puestos$freq)
+
+# Calcula el límite inferior
+puestos$ymin <- c(0, head(puestos$ymax, n=-1))
+
+# Hacemos el gráfico
+ggplot(puestos, aes(ymax=ymax, ymin=ymin, xmax=4, xmin=3, fill=puesto)) +
+  geom_rect() +
+  coord_polar(theta="y") + # Elimina esta línea de código para entender lo que hace R.
+  xlim(c(2, 4)) + # Prueben eliminando esta línea de código para hacer un gráfico de torta
+  theme_void() +                             # Cambia estética del gráfico
+  theme(legend.position = "top",            # Cambia la posición de la leyenda
+        plot.title.position = "plot") +      # Cambia la posición del título  
+  labs(title = "Respuestas por puesto",
+       fill = "Puesto")
+
+```

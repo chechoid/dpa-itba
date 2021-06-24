@@ -6,7 +6,6 @@ library(gt)
 library(lubridate)
 library(summarytools)
 
-
 options(scipen = 999)
 
 azul <- "#344D7E"

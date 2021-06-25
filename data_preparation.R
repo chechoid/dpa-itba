@@ -107,6 +107,15 @@ satisfaccion <- kiwi_ar %>%
 analistas <- kiwi_ar %>% 
   filter(puesto == "Analista")
 
+library(readxl)
+
+encuesta <- read_excel("PEPA/encuesta.xlsx")
+
+encuesta2 <- encuesta %>% 
+  pivot_longer(cols = c(liderazgo, trabajo_equipo, clima_trabajo, imagen_empresa, recomienda_empresa),
+               names_to = "pregunta", 
+               values_to = "valor")
+
 # Guardar archivos
 saveRDS(kiwi_ar, file = "PEPA/kiwi_ar.RDS")
 write_delim(kiwi_ar, file = "PEPA/kiwi_ar.csv", delim = ";")
@@ -118,4 +127,17 @@ saveRDS(analistas, file = "PEPA/analistas.RDS")
 table(kiwi_ar$puesto)
 
 summary(kiwi_ar$ajuste_porcentaje)
+
 summary(kiwi_ar$rangos_aumentos)
+
+
+hist(kiwi_ar$sueldo_bruto)
+
+max(kiwi_ar$sueldo_bruto)
+
+kiwi_ar %>% 
+  select(sueldo_bruto) %>% 
+  filter(sueldo_bruto > 500000)
+
+kiwi_ar %>% 
+  count(ajuste)

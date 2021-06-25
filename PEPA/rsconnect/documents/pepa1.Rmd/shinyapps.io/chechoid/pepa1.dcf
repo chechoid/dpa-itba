@@ -1,0 +1,13 @@
+name: pepa1
+title: pepa1
+username:
+account: chechoid
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 4319902
+bundleId: 4756845
+url: https://chechoid.shinyapps.io/pepa1/
+when: 1624639731.55872
+lastSyncTime: 1624639731.55872
+asMultiple: FALSE
+asStatic: FALSE

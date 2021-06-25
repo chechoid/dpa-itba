@@ -194,7 +194,7 @@ quiz(
 
 -   **Frecuencia relativas acumuladas:** Que representa el *porcentaje acumulado* de los ingresos de cada trimestre.
 
-### A practicar!
+### Práctica 1
 
 ¿Se puede tomar mate en todas las empresas? Veamos la cantidad de respuestas de la variable `mate` para ver en cuántos casos respondieron que sí se podía tomar, y cuántos respondieron que no. Reemplazá los espacios vacíos según corresponda al nombre de la función o de la variable.
 
@@ -429,7 +429,7 @@ Esta forma de graficar una variable *cuantitativa* en categorías nos sirve para
 
 A primera vista, el *histograma* parece un gráfico de barras, con la diferencia que la barra no representa un valor único (por ejemplo 5), sino un *rango de valores*. (por ejemplo, entre 5 y 10). Ergo, el alto de la barra va a estar dado por la cantidad de casos que caigan dentro de cada rango.
 
-![El arquitecto de Matrix diciendo ergo](https://alchetron.com/cdn/architect-the-matrix-7af001d6-8db4-40d6-8e40-fbf29656e28-resize-750.jpeg ""Ergo"")
+![Ay el arquitecto de Matrix diciendo ergo](https://alchetron.com/cdn/architect-the-matrix-7af001d6-8db4-40d6-8e40-fbf29656e28-resize-750.jpeg ""Ergo"")
 
 De nuevo, hay varias formas de hacer un histograma en R. En R base la forma es la siguiente:
 
@@ -775,4 +775,339 @@ rango_ic
 
 Ya sé, se están preguntando *"¿Para qué carajo me sirve todo esto?"*. El **rango intercuartil** es un paso necesario para determinar si un valor **es un outlier o no** 🤯🤯🤯**.**
 
-Si a ese *rango intercuartil* lo multiplico por 1.5, y a eso se lo restamos al *primer cuartil* obtenemos el límite inferior para determinar los outliers, y si ese resultado (IQR x 1.5) se lo sumamos al *tercer cuartil*.
+Si a ese *rango intercuartil* lo multiplico por 1.5, y a eso se lo restamos al *primer cuartil* obtenemos el límite inferior para determinar los outliers, y si ese resultado (IQR x 1.5) se lo sumamos al *tercer cuartil* obtenemos el límite superior para detectar los outliers.
+
+```{r q4, exercise=TRUE}
+# Calcular el primer cuartil
+q1 <- quantile(kiwi_ar$edad, 0.25)
+
+# Calcular el tercer cuartil
+q3 <- quantile(kiwi_ar$edad, 0.75)
+
+# Calcular el rango intercuartil
+rango_ic <- q3 - q1
+
+# Calcular límite inferior
+lim_inf <- q1 - rango_ic * 1.5
+
+# Calcular límite superior
+lim_sup <- _______________ * 1.5
+
+# Ver ambos resultados
+lim_inf
+lim_sup
+```
+
+```{r q4-hint}
+# Calcular el primer cuartil
+q1 <- quantile(kiwi_ar$edad, 0.25)
+
+# Calcular el tercer cuartil
+q3 <- quantile(kiwi_ar$edad, 0.75)
+
+# Calcular el rango intercuartil
+rango_ic <- q3 - q1
+
+# Calcular límite inferior
+lim_inf <- q1 - rango_ic * 1.5
+
+# Calcular límite superior
+lim_sup <- q3 - rango_ic * 1.5
+
+# Ver ambos resultados
+lim_inf
+lim_sup
+```
+
+Todo esto fue una excusa para introducir uno de mis gráficos favoritos: los **boxplots**.
+
+![](https://raw.githubusercontent.com/chechoid/dpa-itba/main/PEPA/boxplot.png){width="513"}
+
+Hagamos un ejemplo con la variable `edad` del data frame `kiwi_ar`.
+
+```{r q5, exercise = TRUE}
+ggplot(kiwi_ar, aes(x = edad)) +
+  geom_boxplot()
+```
+
+En el gráfico podemos apreciar que hay 3 *outliers* por encima de los 54 años aproximadamente.
+
+Algo interesante de los boxplots, es que también nos da una idea de la distribución de los datos.
+
+```{r q6, out.width="70%"}
+ggplot(kiwi_ar, aes(x = edad)) +
+  geom_histogram()
+
+ggplot(kiwi_ar, aes(x = edad)) +
+  geom_boxplot()
+
+```
+
+El paquete `funModeling` tiene algunas funciones muy interesantes. Prueben la función `profiling_num()` sobre la variable `edad`.
+
+```{r q7, exercise = TRUE}
+# install.packages("funModeling") # Por si es necesario
+
+# Cargar librería
+library(funModeling)
+
+# Probar la función profiling_num()
+profiling_num(kiwi_ar$edad)
+```
+
+## Medidas de dispersión
+
+Las medidas de dispersión son muy útiles para saber qué tan lejos están los datos del promedio por ejemplo, y concordantemente, *qué tan representativo es ese promedio y si está siendo influenciado o no por valores extremos*.
+
+![Ay el arquitecto de Matrix diciendo "concordantemente"](https://alchetron.com/cdn/architect-the-matrix-7af001d6-8db4-40d6-8e40-fbf29656e28-resize-750.jpeg)
+
+Dos métricas que nos sirven para calcular la dispersión de los datos son la **varianza** y el **desvío estándar**. El *desvío estándar* es de hecho, la raíz cuadrada de la varianza, y tiene la particularidad que tiene la misma unidad de medida que la variable. O sea qué:
+
+-   Si calculo el desvío estándar de una variable en pesos argentinos, el desvío estará expresado en pesos.
+
+-   Si calculo el desvío estándar de una variable en centímetros, el desvío estándar estará expresado en centímetros.
+
+-   Si calculo el desvío estándar de una variable en años, el desvío estándar estará expresado en años.
+
+![](https://cdn.memegenerator.es/imagenes/memes/full/32/38/32381633.jpg)
+
+Calculemos la varianza y el desvío estándar de la variable `edad` en el data frame `kiwi_ar`.
+
+```{r dis-1, exercise=TRUE}
+# Calcular la varianza
+___(kiwi_ar$edad)
+
+# Calcular el desvío estándar
+__(kiwi_ar$edad)
+```
+
+```{r dis-1-hint-1}
+# Busquen en google. Aprender a buscar soluciones en google también es parte del aprendizaje para programar
+```
+
+```{r dis-1-hint-2}
+# Calcular la varianza
+___(kiwi_ar$edad)
+
+# Calcular el desvío estándar
+__(kiwi_ar$edad)
+```
+
+Otra medida que se puede calcular es el **coeficiente de variación**, que es una medida de la variabilidad de una variable según el tamaño de la muestra (ver en [Wikipedia](https://es.wikipedia.org/wiki/Coeficiente_de_variaci%C3%B3n)).
+
+Su cálculo es muy simple. Surge de dividir el *desvío estándar por el promedio*.
+
+```{r dis-2, exercise=TRUE}
+# Calcular el desvío estándar de la variable edad
+desvio <- sd(kiwi_ar$edad)
+
+# Calcular el promedio de la variable edad
+promedio <- mean(kiwi_ar$edad)
+
+# Calcular el coeficiente de variación
+coef_var <- desvio / promedio
+
+coef_var
+```
+
+## Estandarizar o normalizar variables
+
+¿Como hacemos para analizar una relación entre un sueldo que está expresado en miles de pesos y la experiencia que está expresada en años? O llevándolo a otro dominio, analizar la relación entre el peso y la altura que tienen unidades de medida diferentes (kilos y centímetros).
+
+Para eso existe la **estandarización de variables**, también conocida como **normalización de variables**, y en ocasiones también **z-score**. Esto lo vamos a ver más en profundidad cuando hagamos análisis de dos muestras, pero como su cálculo involucra al *promedio* y al *desvío estándar* nos pareció interesante hacer un anticipo del tema, para luego más adelante hablar de correlaciones por ejemplo.
+
+La fórmula para normalizar una variable es la siguiente:
+
+![](https://wikimedia.org/api/rest_v1/media/math/render/svg/1eda92e3a28b3a7d693348c1b9dd871e5baec300)
+
+Donde:
+
+-   $x$ es el valor de cada observación
+
+-   $\bar{a}$ es la media muestral
+
+-   $s$ es el desvío estándar de la muesta.
+
+O sea que para valor de la variable R le va a restar a cada caso el promedio, y luego dividir al valor por el desvío estándar.
+
+Veamos nuevamente el vector `edades`.
+
+```{r z1, exercise=TRUE}
+# Correr el script
+edades
+
+# Hacer un summary de edades
+summary(edades)
+```
+
+Ahora veamos los valores *estandarizados*.
+
+```{r z2, exercise=TRUE}
+# Correr el script
+scale(edades, center= TRUE, scale=TRUE)
+```
+
+```{r z3, exercise=TRUE}
+# Guardar los valores estandarizados en un objeto
+z_edad <- scale(edades, center= TRUE, scale=TRUE)
+
+# Hacer un summary de este nuevo objeto
+summary(z_edad)
+```
+
+Más adelante retomamos el tema, por ahora lo dejamos acá.
+
+### Práctica 3
+
+Calcular el promedio, la mediana y el desvío estándar de la variable `sueldo_bruto` del data frame `kiwi_ar`.
+
+```{r desc-1, exercise=TRUE, exercise.lines=10}
+# Calcular el promedio
+___(kiwi_ar$sueldo_bruto)
+
+# Calcular la mediana
+____(______$_______)
+
+# Calcular el desvío estándar
+sd(____$_____)
+```
+
+```{r des-1-hint-1}
+# La función para calcular el promedio es mean
+
+# La función para calcular la mediana se llama median. Poner primero el nombre del data frame y luego el de la columna.
+
+# Poner el nombre del data frame kiwi_ar y luego el de la columna sueldo_bruto
+```
+
+```{r des-2-hint-2}
+# Calcular el promedio
+mean(kiwi_ar$sueldo_bruto)
+
+# Calcular la mediana
+median(kiwi_ar$sueldo_bruto)
+
+# Calcular el desvío estándar
+sd(kiwi_ar$sueldo_bruto)
+```
+
+Otra alternativa para calcular estos resultados es usando la secuencias de `tidyverse`.
+
+```{r des-3, exercise=TRUE}
+kiwi_ar %>% 
+  select(sueldo_bruto) %>% 
+  summarise(promedio = mean(sueldo_bruto),
+            mediana = median(sueldo_bruto),
+            desvio = sd(sueldo_bruto))
+```
+
+Realizar un histograma de la variable `sueldo_bruto`. ¿Por qué sale así?
+
+```{r des-4, exercise = TRUE}
+# Realizar un histograma de sueldo_bruto
+ggplot(_____, aes(x  = sueldo_bruto)) +
+  geom_______(bins = 20)
+```
+
+```{r des-4-hint-1}
+# Poner el nombre del data frame kiwi_ar
+
+# Para hacer un histograma necesitamos usar geom_histogram()
+```
+
+```{r des-4-hint-2}
+# Realizar un histograma de sueldo_bruto
+ggplot(kiwi_ar, aes(x  = sueldo_bruto)) +
+  geom_histogram(bins = 20)
+```
+
+Ahora crear un data frame nuevo, llamado `kiwi_limpio` filtrando todo lo que esté por debajo del *percentil 5* y todo lo que esté por encima del *percentil 95*.
+
+```{r des-5, exercise = TRUE, exercise.lines = 22}
+# Calcular el valor para el percentil 5
+p5 <- quantile(kiwi_ar$sueldo_bruto, 0.05)
+p5
+
+# Calcular el valor para el percentil 95
+p95 <- _______(_______$__________, 0.95)
+p95
+
+# Filtrar los sueldos por debajo y por encima de los percentiles 5 y 95 guardándolos en un nuevo data frame
+kiwi_limpio <- kiwi_ar %>% 
+  filter(between(            # Filtra los casos que estén dentro de los límites
+    sueldo_bruto,            # Columna para filtrar
+    p5,                      # Límite inferior
+    p95                      # Límite superior
+  ))
+
+# Realizar un histograma de sueldo_bruto
+ggplot(kiwi_limpio, aes(x  = __________)) +
+  geom_histogram(bins = 20)
+```
+
+```{r des-5-hint-1}
+# Utilizar la fórmula quantile y luego indicar el nombre del data frame y de la columna
+
+# Asignar al eje x la variable sueldo_bruto
+```
+
+```{r des-5-hint-2}
+# Calcular el valor para el percentil 5
+p5 <- quantile(kiwi_ar$sueldo_bruto, 0.05)
+p5
+
+# Calcular el valor para el percentil 95
+p95 <- quantile(kiwi_ar$sueldo_bruto, 0.95)
+p95
+
+# Filtrar los sueldos por debajo y por encima de los percentiles 5 y 95 guardándolos en un nuevo data frame
+kiwi_limpio <- kiwi_ar %>% 
+  filter(between(            # Filtra los casos que estén dentro de los límites
+    sueldo_bruto,            # Columna para filtrar
+    p5,                      # Límite inferior
+    p95                      # Límite superior
+  ))
+
+# Realizar un histograma de sueldo_bruto
+ggplot(kiwi_limpio, aes(x  = sueldo_bruto)) +
+  geom_histogram(bins = 20)
+```
+
+Los data frames `kiwi_ar` y `kiwi_limpio` están almacenados en memoria. Realizar un boxplot de la columna `sueldo_bruto` para ambos datasets. ¿Qué interpretación hacen de los resultados?
+
+```{r des-6, exercise = TRUE}
+# Realizar un boxplot para el data frame kiwi_ar
+ggplot(_____, aes(x = sueldo_bruto)) +
+  geom_______()
+
+# Realizar un boxplot para el data frame kiwi_limpio
+ggplot(kiwi_limpio, __________)) +
+    geom_boxplot()
+```
+
+```{r des-6-hint-1}
+# Reemplazar el primer espacio vacío por el nombre del data frame
+# Para hacer un boxplot necesitás usar geom_boxplot()
+
+# Hay que asignar columna sueldo_bruto al eje x dentro de aes()
+# Tené cuidado con los paréntisis al final de la primera línea del código
+```
+
+```{r des-6-solution}
+# Realizar un boxplot para el data frame kiwi_ar
+ggplot(kiwi_ar, aes(x = sueldo_bruto)) +
+  geom_boxplot()
+
+# Realizar un boxplot para el data frame kiwi_limpio
+ggplot(kiwi_limpio, aes(x = sueldo_bruto)) +
+    geom_boxplot()
+```
+
+Por último, graficar un boxplot usando el data frame `kiwi_limpio` mapeando en el eje `x` el `puesto`, y en el eje `y` el `sueldo_bruto`. ¿Qué interpretación hacen de los resultados?
+
+```{r des-7, exercise=TRUE}
+ggplot(kiwi_limpio, aes(x = puesto, y = sueldo_bruto)) +
+    geom_boxplot()
+```
+
+Y con esto, cerramos el capítulo de análisis univariado y abrimos el de análisis de dos muestras 🤘.

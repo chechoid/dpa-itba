@@ -427,7 +427,7 @@ Esta forma de graficar una variable *cuantitativa* en categorías nos sirve para
 
 A primera vista, el *histograma* parece un gráfico de barras, con la diferencia que la barra no representa un valor único (por ejemplo 5), sino un *rango de valores*. (por ejemplo, entre 5 y 10). Ergo, el alto de la barra va a estar dado por la cantidad de casos que caigan dentro de cada rango.
 
-![El arquitecto de Matrix diciendo Ergo](https://alchetron.com/cdn/architect-the-matrix-7af001d6-8db4-40d6-8e40-fbf29656e28-resize-750.jpeg ""Ergo"")
+![El arquitecto de Matrix diciendo ergo](https://alchetron.com/cdn/architect-the-matrix-7af001d6-8db4-40d6-8e40-fbf29656e28-resize-750.jpeg ""Ergo"")
 
 De nuevo, hay varias formas de hacer un histograma en R. En R base la forma es la siguiente:
 
@@ -443,3 +443,103 @@ ggplot(kiwi_ar, aes(x = ajuste_porcentaje)) +
 ```
 
 Prueben distintas versiones del histograma cambiando la cantidad de `bins` o incluso borrando todo lo que está dentro del paréntesis de `geom_histogram()`.
+
+Podemos agregar una capa adicional de información a la visualización con un gráfico adicional conocido como **polígono de frecuencia.** Una clave para que este gráfico funcione bien en conjunto con el histograma es que ambos tengan el mismo valor en `bins`.
+
+```{r freq-1, exercise = TRUE}
+ggplot(kiwi_ar, aes(x = ajuste_porcentaje)) +
+  geom_histogram(bins = 15) +
+  geom_freqpoly(aes(ajuste_porcentaje),  # Añadimos el polígono de frecuencia
+                bins = 15)
+```
+
+Esta capa extra nos ayuda a identificar de manera más clara la **distribución** de los datos. ¿Por qué es importante conocer la distribución de los datos? Porque a veces los datos, los cálculos y las medidas de resumen pueden *esconder* algunos problemas.
+
+![](https://raw.githubusercontent.com/chechoid/dpa-itba/main/PEPA/distribucion.png)
+
+Busquen información sobre el [Cuarteto de Anscombe](http://ptarra.blogspot.com/2013/05/el-cuarteto-de-anscombe.html) y especialmente del [Datasaurus Dozen](http://www.thefunctionalart.com/2016/08/download-datasaurus-never-trust-summary.html).
+
+### Práctica 2
+
+```{r carga-datos3}
+library(funModeling)
+
+percentiles = profiling_num(kiwi_ar$sueldo_bruto)
+
+p05 = percentiles[1,6]
+p95 = percentiles[1,10]
+
+kiwi_limpio = kiwi_ar %>% 
+  filter(between(sueldo_bruto, p05, p95))
+```
+
+Realizar un histograma de la variable `sueldo_bruto`. Usa la función `hist` de R base.
+
+```{r hist-4, exercise=TRUE}
+____(kiwi_ar$___________)
+```
+
+```{r hist-4-hint-1}
+# La función de R base para hacer un histograma se llama hist
+# Luego del símbolo $ poné el nombre de la variable sueldo_bruto
+```
+
+```{r hist-4-hint-2}
+hist(kiwi_ar$sueldo_bruto)
+```
+
+Aquí nos encontramos con el problema de los *outliers*. ¿Cuál es el `sueldo_bruto` más alto? ¿Y el más bajo?
+
+```{r hist-5, exercise = TRUE}
+# Cuál imaginan que es la función para calcular el valor máximo de una columna
+___(kiwi_ar$____)
+
+# Detectar el sueldo bruto más bajo
+min(_____$sueldo_bruto)
+```
+
+```{r hist-5-hint}
+# Cuál imaginan que es la función para calcular el valor máximo de una columna
+max(kiwi_ar$sueldo_bruto)
+
+# Detectar el sueldo bruto más bajo
+min(kiwi_ar$sueldo_bruto)
+```
+
+Vemos que tenemos un `sueldo_bruto` de más de \$ 2 millones de pesos. En el histograma anterior, también podemos identificar otro caso atípicamente alto, ¿en qué rango salarial se encuentra?
+
+```{r hist-6}
+quiz(
+  question(
+    "¿En qué rango salarial encontramos otro outlier o valor atípico?",
+    answer("Entre $ 250.000 y $ 500.000", message = "Nop, probá otra vez"),
+    answer("Entre $ 500.000 y $ 1.000.000", correct = TRUE, message = "Excelente! Hay una respuesta de $ 650.000"),
+    answer("Entre $ 1.000.000 y $ 1.500.000", message = "Nop, probá otra vez"),
+    allow_retry = TRUE, 
+    submit_button = "Enviar respuesta",
+    try_again_button = "Intenta de nuevo"
+  )
+)
+```
+
+Usando un data frame nuevo, llamado `kiwi_limpio` realizar nuevamente el histograma de la variable `sueldo_bruto`.
+
+```{r hist-7, exercise=TRUE}
+____(______$________)
+```
+
+```{r hist-7-hint-1}
+# La función de R base es hist
+# Poné primero el nombre del nuevo data frame y luego la variable sueldo_bruto
+```
+
+```{r hist-7-hint-2}
+# El nuevo data frame se llama kiwi_limpio
+# Recordá poner nombre_dataframe$nombre_variable
+```
+
+```{r hist-7-hint-3}
+hist(kiwi_limpio$sueldo_bruto
+```
+
+## Medidas de resumen estadístico

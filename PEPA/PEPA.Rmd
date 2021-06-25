@@ -15,7 +15,7 @@ knitr::opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE)
 
 ![](https://youtu.be/Mz4GbMCqvcY){width="80%"}
 
-Este es un tutorial interactivo que diseñamos para simplificar la práctica y afirmar los conocimientos vistos en las clases de **PEPA** (**P**enstamiento **E**stadístico en **P**eople **A**nalytics) y pensado para simplificar lo más posible los ejercicios sin que requiera tanto de vos escribiendo código.
+Este es un tutorial interactivo que diseñamos para simplificar la práctica y afirmar los conocimientos vistos en las clases de **PEPA** (**P**ensamiento **E**stadístico en **P**eople **A**nalytics) y pensado para simplificar lo más posible los ejercicios sin que requiera tanto de vos escribiendo código.
 
 Los scripts que usaremos en este documento los podés copiar y pegar para reutilizarlos en tu propia PC. Recordá que tenés estos recursos a disposición:
 

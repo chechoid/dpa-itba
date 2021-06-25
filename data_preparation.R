@@ -141,3 +141,10 @@ kiwi_ar %>%
 
 kiwi_ar %>% 
   count(ajuste)
+
+library(dplyr)
+edades <- readxl::read_excel("PEPA/edades.xlsx") %>% select(Inicial, Edad)
+
+edades
+
+write.csv(edades, file = "PEPA/edades.csv")

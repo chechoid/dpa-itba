@@ -381,6 +381,8 @@ ggplot(puestos, aes(ymax=ymax, ymin=ymin, xmax=4, xmin=3, fill=puesto)) +
 
 ```
 
+![](https://raw.githubusercontent.com/chechoid/dpa-itba/main/PEPA/pie_crocs.jpg){width="355"}
+
 ## Trabajando con variables cuantitativas
 
 Con las variables numéricas, por otro lado podemos hacer análisis mucho más diversos que con las variables categóricas. Podemos hacer desde cálculos aritméticos (sumas, restas, multiplicaciones y divisiones) hasta *cálculos de resumen estadístico* (promedio, mediana, desvío estándar, etc.).
@@ -575,3 +577,202 @@ kiwi_ar %>%
   filter(ajuste %in% c("2 ajustes", "3 o más ajustes")) %>% 
   count(ajuste)
 ```
+
+Todo esto es para hacer una introducción al **promedio**, denominado también **media muestral**.
+
+```{r carga-datos-4}
+df_edad <- read.csv("edades.csv")
+edades <- df_edad %>% select(Edad) %>% pull()
+edades <- sort(edades)
+```
+
+## Promedio
+
+El **promedio** o **media muestral** es una medida de tendencia central. Esto quiere decir que ese valor será el más representativo del conjunto de datos (o al menos eso se espera). Para hacer algunos ejemplos vamos a usar las edades de los alumnos de un curso.
+
+```{r prom-1, exercise = TRUE}
+edades
+```
+
+Como explica Walter Sosa Escudero, si todas estas personas entraran en un aula, y se fundieran en uno solo, la edad que tendría esa persona que representa a todos, sería la *edad promedio*.
+
+La función para calcular la media muestral o promedio se llama `mean()`.
+
+```{r prom-2, exercise=TRUE}
+____(edades)
+```
+
+```{r prom-2-hint}
+mean(edades)
+```
+
+Como ya saben, el promedio es sensible a los valores extremos. Creen un nuevo vector llamado `edades_2` y modifiquen el primer valor del vector y pongan 120 y vuelvan a calcular el promedio.
+
+```{r prom-3, exercise=TRUE}
+# Crear un nuevo vector con los valores de edad
+edades_2 <- edad
+
+# Modificar el primer elemento y poner 120
+edades_2[1] <- ____
+edades_2
+
+# Calcular nuevo promedio del vector edades_2
+____(_________)
+```
+
+```{r prom-3-hint}
+# Crear un nuevo vector con los valores de edad
+edades_2 <- edades
+
+# Modificar el primer elemento y poner 120
+edades_2[1] <- 120
+edades_2
+
+# Calcular nuevo promedio del vector edades_2
+mean(edades_2)
+```
+
+```{r promedio-2}
+# Crear un nuevo vector con los valores de edad
+edades_2 <- edades
+
+# Modificar el primer elemento y poner 120
+edades_2[1] <- 120
+```
+
+Podemos apreciar que el promedio pasó de `r round(mean(edades),2)` en el primer vector, y con el segundo vector cambió a `r round(mean(edades_2),2)` .
+
+Algo muuuuy importante en estadística es el concepto de *distancia*. Una característica del promedio es que es el valor que tiene la menor distancia a todos los puntos. Se los dejo picando porque este concepto va a ser útil para entender algo más adelante cuando hablemos de regresiones lineales.
+
+```{r mean-3, exercise = TRUE}
+# Guardar el promedio edades
+promedio_edad <- mean(edades)
+
+# Grafiquemos las edades para cada persona
+ggplot(df_edad, aes(x = Edad, y = Inicial)) +
+  geom_point(size = 3) +
+  geom_vline(xintercept = promedio_edad, size = 1, color = "red")
+```
+
+## Mediana y cuantiles
+
+Así como el promedio es una medida de *tendencia central*, al igual que la **mediana**. Los **cuantiles** son medidas **de orden** (por ende los \*cuartiles o deciles\* también lo son). Lo que hacen estas medidas es ordenar los datos de mayor a menor, y nos indican cuál es el valor que está en:
+
+Internamente, para calcular la mediana, se ordenan los valores de mayor a menor y se busca el valor que está en la mitad de la variable.
+
+![](https://karatedolam.files.wordpress.com/2011/07/karate_tameshiwari.jpg){width="196"}
+
+Si tenemos una cantidad de datos impares, el valor que está justo a la mitad (dejando la misma cantidad de casos de un lado y del otro) esa será la mediana.
+
+Si tenemos una cantidad par de datos, para calcular la mediana, hacemos un promedio entre los valores que están en la mitad de los valores.
+
+Nuestro vector `edades` tiene 11 elementos. ¿Cuál será la mediana?
+
+```{r med-1, exercise = TRUE}
+# Correr el script y pensar cuál será la mediana
+edades
+
+# Verificar calculando la mediana con la función median
+median(______)
+```
+
+```{r med-1-hint}
+# Correr el script y pensar cuál será la mediana
+edades
+
+# Verificar calculando la mediana con la función median
+median(edades)
+```
+
+Creemos un nuevo vector llamado `edades_3` agregando un nuevo elemento y calcular la mediana usando la función `median()`.
+
+```{r med-2, exercise = TRUE}
+#Crear un nuevo vector
+edades_3 <- edades
+
+# Agregar un nuevo valor
+edades_3[12] <- 50
+
+# Calcular la mediana
+_____(edades_3)
+```
+
+```{r med-2-hint}
+#Crear un nuevo vector
+edades_3 <- edades
+
+# Agregar un nuevo valor
+edades_3[12] <- 50
+
+# Calcular la mediana
+median(edades_3)
+```
+
+Es bien sabido que una propiedad de la mediana es que no se ve afectada por los valores extremos.
+
+```{r med-3, exercise = TRUE}
+#Crear un nuevo vector
+edades_4 <- edades
+
+# Modificar el primer valor con un valor alto
+edades_3[1] <- 150
+
+# Calcular la mediana
+median(edades_4)
+
+```
+
+Hay cuantiles que tienen *"nombres propios"**.*** Por ejemplo,
+
+Los **cuartiles** que dividen a la variable en 4 partes (en el 25%, 50% y 75% de los datos.
+
+Los **quintiles** que dividen a la variable en 5 partes. (en el 20%, 40%, 60%, 80% de los datos).
+
+Los **deciles** que dividen a la variable en 10 partes. (en el 10%, 20%, 30%, 40%, 50%, 60%, 70%, 80%, 90% de los datos).
+
+En la práctica se suelen usar con mucha frecuencia los **cuartiles**, y para algunas medidas de control de los modelos predictivos se controlan resultados usando los **deciles.**
+
+Usemos el data frame `kiwi_ar`. Una forma de rápidamente los *cuartiles* es usando la función `summary()`. Hagamos el cálculo sobre la variable `edad`.
+
+```{r q1, exercise=TRUE}
+summary(kiwi_ar$edad)
+```
+
+La función `summary()` nos permite ver rápidamente:
+
+-   Los valores **mínimo** y **máximo**.
+
+-   El **primer** y **tercer cuartil**.
+
+-   La **mediana** (median).
+
+-   El **promedio** (mean).
+
+Si queremos definir los *quintiles* o los *deciles*, tenemos que hacerlo manualmente con la función `quantile()`.
+
+```{r q2, exercise = TRUE}
+# Calcular los deciles
+quantile(kiwi_ar$edad, c(0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8))
+
+```
+
+Volviendo a los **cuartiles**, entre el *primer cuartil* y el *tercer cuartil* se encuentran la mitad de los datos 🤯. En algún momento de la historia, algún estadístico o estadística muy fumón o fumona se le ocurrió restar al valor del 3er cuartil el valor del 1er cuartil y a eso lo llamó **Rango Intercuartil** (se lo conoce con las siglas IQR en inglés).
+
+Hagamos la prueba con la variable `edad` del data frame `kiwi_ar`.
+
+```{r q3, exercise = TRUE}
+# Calcular el primer cuartil
+q1 <- quantile(kiwi_ar$edad, 0.25)
+
+# Calcular el tercer cuartil
+q3 <- ________(______$___ , ___)
+
+# Calcular el rango intercuartil
+rango_ic <- ___ - ___
+
+rango_ic
+```
+
+Ya sé, se están preguntando *"¿Para qué carajo me sirve todo esto?"*. El **rango intercuartil** es un paso necesario para determinar si un valor **es un outlier o no** 🤯🤯🤯**.**
+
+Si a ese *rango intercuartil* lo multiplico por 1.5, y a eso se lo restamos al *primer cuartil* obtenemos el límite inferior para determinar los outliers, y si ese resultado (IQR x 1.5) se lo sumamos al *tercer cuartil*.

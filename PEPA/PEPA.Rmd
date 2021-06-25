@@ -473,19 +473,20 @@ kiwi_limpio = kiwi_ar %>%
   filter(between(sueldo_bruto, p05, p95))
 ```
 
-Realizar un histograma de la variable `sueldo_bruto`. Usa la función `hist` de R base.
+Realizar un histograma de la variable `sueldo_bruto`.
 
 ```{r hist-4, exercise=TRUE}
-____(kiwi_ar$___________)
+ggplot(kiwi_ar, aes(x = _______)) +
+  geom_histogram()
 ```
 
 ```{r hist-4-hint-1}
-# La función de R base para hacer un histograma se llama hist
-# Luego del símbolo $ poné el nombre de la variable sueldo_bruto
+# Colocá el nombre de la variable a graficar (sueldo_bruto)
 ```
 
 ```{r hist-4-hint-2}
-hist(kiwi_ar$sueldo_bruto)
+ggplot(kiwi_ar, aes(x = sueldo_bruto)) +
+  geom_histogram()
 ```
 
 Aquí nos encontramos con el problema de los *outliers*. ¿Cuál es el `sueldo_bruto` más alto? ¿Y el más bajo?
@@ -542,4 +543,35 @@ ____(______$________)
 hist(kiwi_limpio$sueldo_bruto
 ```
 
-## Medidas de resumen estadístico
+# Medidas de resumen estadístico
+
+La estadística es una disciplina que suele trabajar con *muestras*. Con cierta frecuencia, nos encontramos que no podemos analizar a todos los empleados porque sería muy costoso en tiempo y recursos, o bien porque nos interesa segmentar el análisis sobre alguna muestra en particular.
+
+Sobre esas muestras hacemos *inferencias* sobre la población que estamos analizando.
+
+En nuestro caso, la **población** de la encuesta es de `r nrow(kiwi_ar)` casos. De ese total, podríamos pensar en las siguientes **muestras** de datos por ejemplo:
+
+-   Personas en posiciones de Gerente.
+
+-   Conjunto de mujeres en posiciones de liderazgo.
+
+-   Personas que recibieron más de un aumento salarial.
+
+-   etc..
+
+```{r est-1, echo=TRUE}
+# Personas en posiciones de Gerente
+kiwi_ar %>% 
+  filter(puesto == "Gerente") %>% 
+  count(puesto)
+
+# Conjunto de mujeres en posiciones de liderazgo
+kiwi_ar %>% 
+  filter(es_lider == 1, genero == "Femenino") %>% 
+  count(puesto)
+
+# Personas que recibieron más de un aumento salarial
+kiwi_ar %>% 
+  filter(ajuste %in% c("2 ajustes", "3 o más ajustes")) %>% 
+  count(ajuste)
+```

@@ -116,6 +116,11 @@ encuesta2 <- encuesta %>%
                names_to = "pregunta", 
                values_to = "valor")
 
+encuesta2 <- encuesta2 %>% 
+  mutate(resultado = if_else(valor %in% c("Totalmente de acuerdo", "De acuerdo"),1,0))
+
+
+
 # Guardar archivos
 saveRDS(kiwi_ar, file = "PEPA/kiwi_ar.RDS")
 write_delim(kiwi_ar, file = "PEPA/kiwi_ar.csv", delim = ";")

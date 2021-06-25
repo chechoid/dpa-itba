@@ -117,8 +117,8 @@ $(document).ready(function () {
 
 <div class="topics">
 
-<div id="section-pepa" class="section level1">
-<h1>PEPA</h1>
+<div id="section-pepa" class="section level2">
+<h2>PEPA</h2>
 <p><img src="https://youtu.be/Mz4GbMCqvcY" style="width:80.0%" /></p>
 <p>Este es un tutorial interactivo que diseñamos para simplificar la práctica y afirmar los conocimientos vistos en las clases de <strong>PEPA</strong> (<strong>P</strong>ensamiento <strong>E</strong>stadístico en <strong>P</strong>eople <strong>A</strong>nalytics) y pensado para simplificar lo más posible los ejercicios sin que requiera tanto de vos escribiendo código.</p>
 <p>Los scripts que usaremos en este documento los podés copiar y pegar para reutilizarlos en tu propia PC. Recordá que tenés estos recursos a disposición:</p>
@@ -127,8 +127,9 @@ $(document).ready(function () {
 <li><a href="https://chechoid.shinyapps.io/clase_1_introduccion_r_y_tidyverse/">Tutorial interactivo de Introducción a R</a></li>
 <li>Todo el material del <a href="https://drive.google.com/drive/folders/1Qck3z_t6XLRXb2vbN-00931DgdJZ0yse?usp=sharing">Club de R para RRHH</a> en Google Drive. Cada carpeta de cada mes, tiene un link a su respectivo video en Youtube. Y acá hay contenido introductorio, hasta cosas más complejas como análisis predictivos, text mining o análisis de clusters por ejemplo.</li>
 </ul>
-<div id="section-cómo-usar-este-tutorial" class="section level3">
-<h3>¿Cómo usar este tutorial?</h3>
+</div>
+<div id="section-cómo-usar-este-tutorial" class="section level2">
+<h2>¿Cómo usar este tutorial?</h2>
 <p>Este tutorial va a tener distintas secciones, en las cuales vas a poder correr los resultados directamente aprentando el ícono que dice <strong>“Run Code”</strong>.</p>
 <p>Por ejemplo, probá sumar 2 + 2 y hacer click en <strong>“Run Code”</strong>.</p>
 <div class="tutorial-exercise" data-label="two-plus-two" data-caption="Code" data-completion="1" data-diagnostics="1" data-startover="1" data-lines="0">
@@ -163,12 +164,12 @@ edad &lt;- anio_actual - anio_nacimiento
 # Visualizá los resultados
 edad</code></pre>
 </div>
+</div>
+<div id="section-explorando-los-datos" class="section level2">
+<h2>Explorando los datos</h2>
 <p>Para este tutorial vamos a utilizar el dataset de la <strong>Encuesta KIWI de Sueldos LATAM</strong> 🥝 que están almacenados en un objeto .<code>RDS</code> que es una extensión propia de R para almacenar datos y que mantiene las características de los datos. También hay una versión <code>.csv</code> en el <a href="https://github.com/chechoid/dpa-itba/tree/main/PEPA">repositorio de esta clase</a>.</p>
 <pre class="r"><code># Cargamos los datos
 kiwi_ar &lt;- readRDS(&quot;kiwi_ar.RDS&quot;)</code></pre>
-</div>
-<div id="section-explorando-los-datos" class="section level3">
-<h3>Explorando los datos</h3>
 <p>Corré la siguiente línea de código y respondé la pregunta a continuación</p>
 <div class="tutorial-exercise" data-label="str" data-caption="Code" data-completion="1" data-diagnostics="1" data-startover="1" data-lines="0">
 <pre class="text"><code># Ver la estructura del data frame
@@ -185,10 +186,10 @@ str(kiwi_ar)</code></pre>
 </div>
 </div>
 </div>
-</div>
-<div id="section-análisis-univariado" class="section level1">
-<h1>Análisis Univariado</h1>
+<div id="section-análisis-univariado" class="section level2">
+<h2>Análisis Univariado</h2>
 <p>Con el <strong>análisis univariado</strong> lo que hacemos es analizar una variable a la vez. Dependiendo si la variable es <em>categórica</em> o <em>numérica</em> vamos a poder realizar distintas cálculos y análisis.</p>
+</div>
 <div id="section-trabajando-con-variables-categóricas" class="section level2">
 <h2>Trabajando con variables categóricas</h2>
 <p>Con las variables <em>categóricas,</em> ya sean <em>nominales</em> u <em>ordinales</em>, no podemos hacer calculos aritméticos como sumas, promedios y cosas por el estilo. ¿Qué podemos hacer? Por ejemplo contar casos.</p>
@@ -233,16 +234,17 @@ kiwi_ar %&gt;%
 <script>if (Tutorial.triggerMathJax) Tutorial.triggerMathJax()</script>
 </div>
 </div>
-<div id="section-repaso" class="section level3">
-<h3>Repaso</h3>
+</div>
+<div id="section-repaso" class="section level2">
+<h2>Repaso</h2>
 <ul>
-<li><p><strong>Distribución de frecuencias:</strong> Que es el conteo de ingresos por trimestre.</p></li>
+<li><p><strong>Distribución de frecuencias:</strong> Que es el conteo, en este caso, de la cantidad de respuestas recibidas por puesto.</p></li>
 <li><p><strong>Frecuencias relativas:</strong> Que es el <em>porcentaje</em> que representa el conteo sobre el total.</p></li>
 <li><p><strong>Frecuencia relativas acumuladas:</strong> Que representa el <em>porcentaje acumulado</em> de los ingresos de cada trimestre.</p></li>
 </ul>
 </div>
-<div id="section-práctica-1" class="section level3">
-<h3>Práctica 1</h3>
+<div id="section-práctica-1" class="section level2">
+<h2>Práctica 1</h2>
 <p>¿Se puede tomar mate en todas las empresas? Veamos la cantidad de respuestas de la variable <code>mate</code> para ver en cuántos casos respondieron que sí se podía tomar, y cuántos respondieron que no. Reemplazá los espacios vacíos según corresponda al nombre de la función o de la variable.</p>
 <div class="tutorial-exercise" data-label="cate-5" data-caption="Code" data-completion="1" data-diagnostics="1" data-startover="1" data-lines="0">
 <pre class="text"><code>kiwi_ar %&gt;% 
@@ -289,12 +291,12 @@ kiwi_ar %&gt;%
   freq(report.nas = FALSE)</code></pre>
 </div>
 </div>
-</div>
 <div id="section-análisis-univariado-variables-categóricas---visualización" class="section level2">
 <h2>Análisis Univariado Variables Categóricas - Visualización</h2>
 <p>Para visualizar una sola variable categórica, las opciones principales son los gráficos de <strong>barras</strong> y los gráficos de <strong>torta</strong> o de <strong>dona</strong>, con sus respectivas ventajas y desventajas.</p>
-<div id="section-gráficos-de-barras" class="section level3">
-<h3>Gráficos de barras</h3>
+</div>
+<div id="section-gráficos-de-barras" class="section level2">
+<h2>Gráficos de barras</h2>
 <p>Para hacer un gráfico de barras podemos utilizar una función la función de R base <code>plot()</code> indicando la variable que queremos visualizar (indicando primero el nombre del data frame después del signo <code>$</code> el nombre de la variable).</p>
 <div class="tutorial-exercise" data-label="catev-1" data-caption="Code" data-completion="1" data-diagnostics="1" data-startover="1" data-lines="0">
 <pre class="text"><code># Realizar un gráfico de barra
@@ -341,8 +343,8 @@ ggplot(kiwi_ar,             # Primero indicamos el nombre del dataframe
 </div>
 </div>
 </div>
-<div id="section-gráficos-de-torta-o-de-dona" class="section level3">
-<h3>Gráficos de torta o de dona</h3>
+<div id="section-gráficos-de-torta-o-de-dona" class="section level2">
+<h2>Gráficos de torta o de dona</h2>
 <p>Para bien o para mal, los gráficos de torta no tienen un <em>geom</em> específico, y si bien en R base hay una función específica para hacerlos, requiere un poco de preprocesamiento previo.</p>
 <p>En esencia los pasos para hacer un buen gráfico de torta son los siguientes:</p>
 <ol style="list-style-type: decimal">
@@ -381,7 +383,6 @@ ggplot(puestos, aes(ymax=ymax, ymin=ymin, xmax=4, xmin=3, fill=puesto)) +
        fill = &quot;Puesto&quot;)</code></pre>
 <p><img src="pepa1_files/figure-html/pie-chart-1.png" width="624" /></p>
 <p><img src="https://raw.githubusercontent.com/chechoid/dpa-itba/main/PEPA/pie_crocs.jpg" width="355" /></p>
-</div>
 </div>
 <div id="section-trabajando-con-variables-cuantitativas" class="section level2">
 <h2>Trabajando con variables cuantitativas</h2>
@@ -447,8 +448,9 @@ kiwi_ar %&gt;%
 <p>Esta capa extra nos ayuda a identificar de manera más clara la <strong>distribución</strong> de los datos. ¿Por qué es importante conocer la distribución de los datos? Porque a veces los datos, los cálculos y las medidas de resumen pueden <em>esconder</em> algunos problemas.</p>
 <p><img src="https://raw.githubusercontent.com/chechoid/dpa-itba/main/PEPA/distribucion.png" /></p>
 <p>Busquen información sobre el <a href="http://ptarra.blogspot.com/2013/05/el-cuarteto-de-anscombe.html">Cuarteto de Anscombe</a> y especialmente del <a href="http://www.thefunctionalart.com/2016/08/download-datasaurus-never-trust-summary.html">Datasaurus Dozen</a>.</p>
-<div id="section-práctica-2" class="section level3">
-<h3>Práctica 2</h3>
+</div>
+<div id="section-práctica-2" class="section level2">
+<h2>Práctica 2</h2>
 <p>Realizar un histograma de la variable <code>sueldo_bruto</code>.</p>
 <div class="tutorial-exercise" data-label="hist-4" data-caption="Code" data-completion="1" data-diagnostics="1" data-startover="1" data-lines="0">
 <pre class="text"><code>ggplot(kiwi_ar, aes(x = _______)) +
@@ -505,10 +507,8 @@ min(kiwi_ar$sueldo_bruto)</code></pre>
 <pre class="text"><code>hist(kiwi_limpio$sueldo_bruto</code></pre>
 </div>
 </div>
-</div>
-</div>
-<div id="section-medidas-de-resumen-estadístico" class="section level1">
-<h1>Medidas de resumen estadístico</h1>
+<div id="section-medidas-de-resumen-estadístico" class="section level2">
+<h2>Medidas de resumen estadístico</h2>
 <p>La estadística es una disciplina que suele trabajar con <em>muestras</em>. Con cierta frecuencia, nos encontramos que no podemos analizar a todos los empleados porque sería muy costoso en tiempo y recursos, o bien porque nos interesa segmentar el análisis sobre alguna muestra en particular.</p>
 <p>Sobre esas muestras hacemos <em>inferencias</em> sobre la población que estamos analizando.</p>
 <p>En nuestro caso, la <strong>población</strong> de la encuesta es de 548 casos. De ese total, podríamos pensar en las siguientes <strong>muestras</strong> de datos por ejemplo:</p>
@@ -546,6 +546,7 @@ kiwi_ar %&gt;%
   </script>
 </div>
 <p>Todo esto es para hacer una introducción al <strong>promedio</strong>, denominado también <strong>media muestral</strong>.</p>
+</div>
 <div id="section-promedio" class="section level2">
 <h2>Promedio</h2>
 <p>El <strong>promedio</strong> o <strong>media muestral</strong> es una medida de tendencia central. Esto quiere decir que ese valor será el más representativo del conjunto de datos (o al menos eso se espera). Para hacer algunos ejemplos vamos a usar las edades de los alumnos de un curso.</p>
@@ -565,7 +566,7 @@ kiwi_ar %&gt;%
 <p>Como ya saben, el promedio es sensible a los valores extremos. Creen un nuevo vector llamado <code>edades_2</code> y modifiquen el primer valor del vector y pongan 120 y vuelvan a calcular el promedio.</p>
 <div class="tutorial-exercise" data-label="prom-3" data-caption="Code" data-completion="1" data-diagnostics="1" data-startover="1" data-lines="0">
 <pre class="text"><code># Crear un nuevo vector con los valores de edad
-edades_2 &lt;- edad
+edades_2 &lt;- edades
 
 # Modificar el primer elemento y poner 120
 edades_2[1] &lt;- ____
@@ -696,7 +697,7 @@ rango_ic</code></pre>
 </div>
 <p>Ya sé, se están preguntando <em>“¿Para qué carajo me sirve todo esto?”</em>. El <strong>rango intercuartil</strong> es un paso necesario para determinar si un valor <strong>es un outlier o no</strong> 🤯🤯🤯<strong>.</strong></p>
 <p>Si a ese <em>rango intercuartil</em> lo multiplico por 1.5, y a eso se lo restamos al <em>primer cuartil</em> obtenemos el límite inferior para determinar los outliers, y si ese resultado (IQR x 1.5) se lo sumamos al <em>tercer cuartil</em> obtenemos el límite superior para detectar los outliers.</p>
-<div class="tutorial-exercise" data-label="q4" data-caption="Code" data-completion="1" data-diagnostics="1" data-startover="1" data-lines="0">
+<div class="tutorial-exercise" data-label="q4" data-caption="Code" data-completion="1" data-diagnostics="1" data-startover="1" data-lines="20">
 <pre class="text"><code># Calcular el primer cuartil
 q1 &lt;- quantile(kiwi_ar$edad, 0.25)
 
@@ -846,8 +847,9 @@ summary(z_edad)</code></pre>
 <script type="application/json" data-opts-chunk="1">{"fig.width":6.5,"fig.height":4,"fig.retina":2,"fig.align":"default","fig.keep":"high","fig.show":"asis","out.width":624,"warning":false,"error":false,"message":false,"exercise.df_print":"paged","exercise.checker":"NULL"}</script>
 </div>
 <p>Más adelante retomamos el tema, por ahora lo dejamos acá.</p>
-<div id="section-práctica-3" class="section level3">
-<h3>Práctica 3</h3>
+</div>
+<div id="section-práctica-3" class="section level2">
+<h2>Práctica 3</h2>
 <p>Calcular el promedio, la mediana y el desvío estándar de la variable <code>sueldo_bruto</code> del data frame <code>kiwi_ar</code>.</p>
 <div class="tutorial-exercise" data-label="desc-1" data-caption="Code" data-completion="1" data-diagnostics="1" data-startover="1" data-lines="10">
 <pre class="text"><code># Calcular el promedio
@@ -1009,7 +1011,7 @@ output$`tutorial-exercise-str-output` <- renderUI({
 </script>
  
 <script type="application/shiny-prerendered" data-context="server">
-learnr:::question_prerendered_chunk(structure(list(type = "learnr_radio", label = "str-q-1", question = structure("¿Cuántas filas y columnas tiene el dataframe &#39;salarios&#39;?", html = TRUE, class = c("html", "character")), answers = list(structure(list(id = "lnr_ans_db5d950",     option = "548 columnas y 44 variables", value = "548 columnas y 44 variables",     label = structure("548 columnas y 44 variables", html = TRUE, class = c("html",     "character")), correct = FALSE, message = structure("Las observaciones son las filas y las variables son las columnas. Columna es sinónimo de variable en este contexto.", html = TRUE, class = c("html",     "character"))), class = c("tutorial_question_answer", "tutorial_quiz_answer")), structure(list(id = "lnr_ans_9c9e3a", option = "548 variables y 44 filas",     value = "548 variables y 44 filas", label = structure("548 variables y 44 filas", html = TRUE, class = c("html",     "character")), correct = FALSE, message = structure("Mirá de nuevo la primera fila del resultado de la estructura del dataframe kiwi_ar. Primero indica las observaciones, y luego las variables", html = TRUE, class = c("html",     "character"))), class = c("tutorial_question_answer", "tutorial_quiz_answer")), structure(list(id = "lnr_ans_15994f9", option = "548 filas y 44 columnas",     value = "548 filas y 44 columnas", label = structure("548 filas y 44 columnas", html = TRUE, class = c("html",     "character")), correct = TRUE, message = structure("Muy bien!", html = TRUE, class = c("html",     "character"))), class = c("tutorial_question_answer", "tutorial_quiz_answer"))), button_labels = list(submit = structure("Enviar respuesta", html = TRUE, class = c("html", "character")), try_again = structure("Intenta de nuevo", html = TRUE, class = c("html", "character"))), messages = list(correct = structure("Correct!", html = TRUE, class = c("html", "character")), try_again = structure("Incorrect", html = TRUE, class = c("html", "character")), incorrect = structure("Incorrect", html = TRUE, class = c("html", "character")), message = NULL, post_message = NULL), ids = list(    answer = "str-q-1-answer", question = "str-q-1"), loading = structure("<strong>Loading:<\u002fstrong> \n¿Cuántas filas y columnas tiene el dataframe &#39;salarios&#39;?\n<br/><br/><br/>", html = TRUE, class = c("html", "character")), random_answer_order = FALSE, allow_retry = TRUE,     seed = 892321197.084481, options = list()), class = c("learnr_radio", "tutorial_question")))
+learnr:::question_prerendered_chunk(structure(list(type = "learnr_radio", label = "str-q-1", question = structure("¿Cuántas filas y columnas tiene el dataframe &#39;salarios&#39;?", html = TRUE, class = c("html", "character")), answers = list(structure(list(id = "lnr_ans_f98e4a1",     option = "548 columnas y 44 variables", value = "548 columnas y 44 variables",     label = structure("548 columnas y 44 variables", html = TRUE, class = c("html",     "character")), correct = FALSE, message = structure("Las observaciones son las filas y las variables son las columnas. Columna es sinónimo de variable en este contexto.", html = TRUE, class = c("html",     "character"))), class = c("tutorial_question_answer", "tutorial_quiz_answer")), structure(list(id = "lnr_ans_3588c94", option = "548 variables y 44 filas",     value = "548 variables y 44 filas", label = structure("548 variables y 44 filas", html = TRUE, class = c("html",     "character")), correct = FALSE, message = structure("Mirá de nuevo la primera fila del resultado de la estructura del dataframe kiwi_ar. Primero indica las observaciones, y luego las variables", html = TRUE, class = c("html",     "character"))), class = c("tutorial_question_answer", "tutorial_quiz_answer")), structure(list(id = "lnr_ans_d48e934", option = "548 filas y 44 columnas",     value = "548 filas y 44 columnas", label = structure("548 filas y 44 columnas", html = TRUE, class = c("html",     "character")), correct = TRUE, message = structure("Muy bien!", html = TRUE, class = c("html",     "character"))), class = c("tutorial_question_answer", "tutorial_quiz_answer"))), button_labels = list(submit = structure("Enviar respuesta", html = TRUE, class = c("html", "character")), try_again = structure("Intenta de nuevo", html = TRUE, class = c("html", "character"))), messages = list(correct = structure("Correct!", html = TRUE, class = c("html", "character")), try_again = structure("Incorrect", html = TRUE, class = c("html", "character")), incorrect = structure("Incorrect", html = TRUE, class = c("html", "character")), message = NULL, post_message = NULL), ids = list(    answer = "str-q-1-answer", question = "str-q-1"), loading = structure("<strong>Loading:<\u002fstrong> \n¿Cuántas filas y columnas tiene el dataframe &#39;salarios&#39;?\n<br/><br/><br/>", html = TRUE, class = c("html", "character")), random_answer_order = FALSE, allow_retry = TRUE,     seed = 1875602430.6266, options = list()), class = c("learnr_radio", "tutorial_question")))
 </script>
  
 <script type="application/shiny-prerendered" data-context="server">
@@ -1034,7 +1036,7 @@ output$`tutorial-exercise-cate-3-output` <- renderUI({
 </script>
  
 <script type="application/shiny-prerendered" data-context="server">
-learnr:::question_prerendered_chunk(structure(list(type = "learnr_radio", label = "cate-4-1", question = structure("¿Qué porcentaje de las respuestas son de personas en posiciones no jerárquicas (considerando Administrativos, Analistas y HRBP)?", html = TRUE, class = c("html", "character")), answers = list(structure(list(id = "lnr_ans_191dce2",     option = "10.40%", value = "10.40%", label = structure("10.40%", html = TRUE, class = c("html",     "character")), correct = FALSE, message = structure("Ese es el porcentaje de los HRBP", html = TRUE, class = c("html",     "character"))), class = c("tutorial_question_answer", "tutorial_quiz_answer")), structure(list(id = "lnr_ans_df1eb49", option = "56.39%",     value = "56.39%", label = structure("56.39%", html = TRUE, class = c("html",     "character")), correct = TRUE, message = structure("Excelente!", html = TRUE, class = c("html",     "character"))), class = c("tutorial_question_answer", "tutorial_quiz_answer")), structure(list(id = "lnr_ans_47548d8", option = "45.99%",     value = "45.99%", label = structure("45.99%", html = TRUE, class = c("html",     "character")), correct = FALSE, message = structure("Esa es el porcentaje acumulado de Administrativo y Analista. Falta sumar el porcentaje de los HRBP.", html = TRUE, class = c("html",     "character"))), class = c("tutorial_question_answer", "tutorial_quiz_answer"))), button_labels = list(submit = structure("Enviar respuesta", html = TRUE, class = c("html", "character")), try_again = structure("Intenta de nuevo", html = TRUE, class = c("html", "character"))), messages = list(correct = structure("Correct!", html = TRUE, class = c("html", "character")), try_again = structure("Incorrect", html = TRUE, class = c("html", "character")), incorrect = structure("Incorrect", html = TRUE, class = c("html", "character")), message = NULL, post_message = NULL), ids = list(    answer = "cate-4-1-answer", question = "cate-4-1"), loading = structure("<strong>Loading:<\u002fstrong> \n¿Qué porcentaje de las respuestas son de personas en posiciones no jerárquicas (considerando Administrativos, Analistas y HRBP)?\n<br/><br/><br/>", html = TRUE, class = c("html", "character")), random_answer_order = FALSE, allow_retry = TRUE,     seed = 1101954176.48686, options = list()), class = c("learnr_radio", "tutorial_question")))
+learnr:::question_prerendered_chunk(structure(list(type = "learnr_radio", label = "cate-4-1", question = structure("¿Qué porcentaje de las respuestas son de personas en posiciones no jerárquicas (considerando Administrativos, Analistas y HRBP)?", html = TRUE, class = c("html", "character")), answers = list(structure(list(id = "lnr_ans_b566872",     option = "10.40%", value = "10.40%", label = structure("10.40%", html = TRUE, class = c("html",     "character")), correct = FALSE, message = structure("Ese es el porcentaje de los HRBP", html = TRUE, class = c("html",     "character"))), class = c("tutorial_question_answer", "tutorial_quiz_answer")), structure(list(id = "lnr_ans_9e94a89", option = "56.39%",     value = "56.39%", label = structure("56.39%", html = TRUE, class = c("html",     "character")), correct = TRUE, message = structure("Excelente!", html = TRUE, class = c("html",     "character"))), class = c("tutorial_question_answer", "tutorial_quiz_answer")), structure(list(id = "lnr_ans_e53659a", option = "45.99%",     value = "45.99%", label = structure("45.99%", html = TRUE, class = c("html",     "character")), correct = FALSE, message = structure("Esa es el porcentaje acumulado de Administrativo y Analista. Falta sumar el porcentaje de los HRBP.", html = TRUE, class = c("html",     "character"))), class = c("tutorial_question_answer", "tutorial_quiz_answer"))), button_labels = list(submit = structure("Enviar respuesta", html = TRUE, class = c("html", "character")), try_again = structure("Intenta de nuevo", html = TRUE, class = c("html", "character"))), messages = list(correct = structure("Correct!", html = TRUE, class = c("html", "character")), try_again = structure("Incorrect", html = TRUE, class = c("html", "character")), incorrect = structure("Incorrect", html = TRUE, class = c("html", "character")), message = NULL, post_message = NULL), ids = list(    answer = "cate-4-1-answer", question = "cate-4-1"), loading = structure("<strong>Loading:<\u002fstrong> \n¿Qué porcentaje de las respuestas son de personas en posiciones no jerárquicas (considerando Administrativos, Analistas y HRBP)?\n<br/><br/><br/>", html = TRUE, class = c("html", "character")), random_answer_order = FALSE, allow_retry = TRUE,     seed = 345238165.839236, options = list()), class = c("learnr_radio", "tutorial_question")))
 </script>
  
 <script type="application/shiny-prerendered" data-context="server">
@@ -1080,7 +1082,7 @@ output$`tutorial-exercise-catev-3-output` <- renderUI({
 </script>
  
 <script type="application/shiny-prerendered" data-context="server">
-learnr:::question_prerendered_chunk(structure(list(type = "learnr_radio", label = "catev-4-1", question = structure("¿Qué pasa si asignamos la variable puesto al eje y?", html = TRUE, class = c("html", "character")), answers = list(structure(list(id = "lnr_ans_be0e866",     option = "Nada", value = "Nada", label = structure("Nada", html = TRUE, class = c("html",     "character")), correct = FALSE, message = structure("No pasa nada grave pero algo pasa, probá reemplazando x por y en el bloque de código anterior", html = TRUE, class = c("html",     "character"))), class = c("tutorial_question_answer", "tutorial_quiz_answer")), structure(list(id = "lnr_ans_4561f37", option = "Le agarra un virus a la compu y aparezco en la lista de los más buscados por la Interpol",     value = "Le agarra un virus a la compu y aparezco en la lista de los más buscados por la Interpol",     label = structure("Le agarra un virus a la compu y aparezco en la lista de los más buscados por la Interpol", html = TRUE, class = c("html",     "character")), correct = FALSE, message = structure("Les dije 1 millón de veces que no sean exagerados", html = TRUE, class = c("html",     "character"))), class = c("tutorial_question_answer", "tutorial_quiz_answer")), structure(list(id = "lnr_ans_b160f83", option = "El gráfico 'se da vuelta'",     value = "El gráfico 'se da vuelta'", label = structure("El gráfico &#39;se da vuelta&#39;", html = TRUE, class = c("html",     "character")), correct = TRUE, message = structure("Correcto! Los nombres de los puestos aparecen en el eje y (más legibles de hecho) y las barras están apaisadas", html = TRUE, class = c("html",     "character"))), class = c("tutorial_question_answer", "tutorial_quiz_answer"))), button_labels = list(submit = structure("Enviar respuesta", html = TRUE, class = c("html", "character")), try_again = structure("Intenta de nuevo", html = TRUE, class = c("html", "character"))), messages = list(correct = structure("Correct!", html = TRUE, class = c("html", "character")), try_again = structure("Incorrect", html = TRUE, class = c("html", "character")), incorrect = structure("Incorrect", html = TRUE, class = c("html", "character")), message = NULL, post_message = NULL), ids = list(    answer = "catev-4-1-answer", question = "catev-4-1"), loading = structure("<strong>Loading:<\u002fstrong> \n¿Qué pasa si asignamos la variable puesto al eje y?\n<br/><br/><br/>", html = TRUE, class = c("html", "character")), random_answer_order = FALSE, allow_retry = TRUE,     seed = 1950357533.59179, options = list()), class = c("learnr_radio", "tutorial_question")))
+learnr:::question_prerendered_chunk(structure(list(type = "learnr_radio", label = "catev-4-1", question = structure("¿Qué pasa si asignamos la variable puesto al eje y?", html = TRUE, class = c("html", "character")), answers = list(structure(list(id = "lnr_ans_1206d38",     option = "Nada", value = "Nada", label = structure("Nada", html = TRUE, class = c("html",     "character")), correct = FALSE, message = structure("No pasa nada grave pero algo pasa, probá reemplazando x por y en el bloque de código anterior", html = TRUE, class = c("html",     "character"))), class = c("tutorial_question_answer", "tutorial_quiz_answer")), structure(list(id = "lnr_ans_41f5500", option = "Le agarra un virus a la compu y aparezco en la lista de los más buscados por la Interpol",     value = "Le agarra un virus a la compu y aparezco en la lista de los más buscados por la Interpol",     label = structure("Le agarra un virus a la compu y aparezco en la lista de los más buscados por la Interpol", html = TRUE, class = c("html",     "character")), correct = FALSE, message = structure("Les dije 1 millón de veces que no sean exagerados", html = TRUE, class = c("html",     "character"))), class = c("tutorial_question_answer", "tutorial_quiz_answer")), structure(list(id = "lnr_ans_181a402", option = "El gráfico 'se da vuelta'",     value = "El gráfico 'se da vuelta'", label = structure("El gráfico &#39;se da vuelta&#39;", html = TRUE, class = c("html",     "character")), correct = TRUE, message = structure("Correcto! Los nombres de los puestos aparecen en el eje y (más legibles de hecho) y las barras están apaisadas", html = TRUE, class = c("html",     "character"))), class = c("tutorial_question_answer", "tutorial_quiz_answer"))), button_labels = list(submit = structure("Enviar respuesta", html = TRUE, class = c("html", "character")), try_again = structure("Intenta de nuevo", html = TRUE, class = c("html", "character"))), messages = list(correct = structure("Correct!", html = TRUE, class = c("html", "character")), try_again = structure("Incorrect", html = TRUE, class = c("html", "character")), incorrect = structure("Incorrect", html = TRUE, class = c("html", "character")), message = NULL, post_message = NULL), ids = list(    answer = "catev-4-1-answer", question = "catev-4-1"), loading = structure("<strong>Loading:<\u002fstrong> \n¿Qué pasa si asignamos la variable puesto al eje y?\n<br/><br/><br/>", html = TRUE, class = c("html", "character")), random_answer_order = FALSE, allow_retry = TRUE,     seed = 103988342.951577, options = list()), class = c("learnr_radio", "tutorial_question")))
 </script>
  
 <script type="application/shiny-prerendered" data-context="server">
@@ -1147,7 +1149,7 @@ output$`tutorial-exercise-hist-5-output` <- renderUI({
 </script>
  
 <script type="application/shiny-prerendered" data-context="server">
-learnr:::question_prerendered_chunk(structure(list(type = "learnr_radio", label = "hist-6-1", question = structure("¿En qué rango salarial encontramos otro outlier o valor atípico?", html = TRUE, class = c("html", "character")), answers = list(structure(list(id = "lnr_ans_e7f872f",     option = "Entre $ 250.000 y $ 500.000", value = "Entre $ 250.000 y $ 500.000",     label = structure("Entre $ 250.000 y $ 500.000", html = TRUE, class = c("html",     "character")), correct = FALSE, message = structure("Nop, probá otra vez", html = TRUE, class = c("html",     "character"))), class = c("tutorial_question_answer", "tutorial_quiz_answer")), structure(list(id = "lnr_ans_7aaf7ab", option = "Entre $ 500.000 y $ 1.000.000",     value = "Entre $ 500.000 y $ 1.000.000", label = structure("Entre $ 500.000 y $ 1.000.000", html = TRUE, class = c("html",     "character")), correct = TRUE, message = structure("Excelente! Hay una respuesta de $ 650.000", html = TRUE, class = c("html",     "character"))), class = c("tutorial_question_answer", "tutorial_quiz_answer")), structure(list(id = "lnr_ans_9891093", option = "Entre $ 1.000.000 y $ 1.500.000",     value = "Entre $ 1.000.000 y $ 1.500.000", label = structure("Entre $ 1.000.000 y $ 1.500.000", html = TRUE, class = c("html",     "character")), correct = FALSE, message = structure("Nop, probá otra vez", html = TRUE, class = c("html",     "character"))), class = c("tutorial_question_answer", "tutorial_quiz_answer"))), button_labels = list(submit = structure("Enviar respuesta", html = TRUE, class = c("html", "character")), try_again = structure("Intenta de nuevo", html = TRUE, class = c("html", "character"))), messages = list(correct = structure("Correct!", html = TRUE, class = c("html", "character")), try_again = structure("Incorrect", html = TRUE, class = c("html", "character")), incorrect = structure("Incorrect", html = TRUE, class = c("html", "character")), message = NULL, post_message = NULL), ids = list(    answer = "hist-6-1-answer", question = "hist-6-1"), loading = structure("<strong>Loading:<\u002fstrong> \n¿En qué rango salarial encontramos otro outlier o valor atípico?\n<br/><br/><br/>", html = TRUE, class = c("html", "character")), random_answer_order = FALSE, allow_retry = TRUE,     seed = 234683208.390717, options = list()), class = c("learnr_radio", "tutorial_question")))
+learnr:::question_prerendered_chunk(structure(list(type = "learnr_radio", label = "hist-6-1", question = structure("¿En qué rango salarial encontramos otro outlier o valor atípico?", html = TRUE, class = c("html", "character")), answers = list(structure(list(id = "lnr_ans_79c821f",     option = "Entre $ 250.000 y $ 500.000", value = "Entre $ 250.000 y $ 500.000",     label = structure("Entre $ 250.000 y $ 500.000", html = TRUE, class = c("html",     "character")), correct = FALSE, message = structure("Nop, probá otra vez", html = TRUE, class = c("html",     "character"))), class = c("tutorial_question_answer", "tutorial_quiz_answer")), structure(list(id = "lnr_ans_b191d86", option = "Entre $ 500.000 y $ 1.000.000",     value = "Entre $ 500.000 y $ 1.000.000", label = structure("Entre $ 500.000 y $ 1.000.000", html = TRUE, class = c("html",     "character")), correct = TRUE, message = structure("Excelente! Hay una respuesta de $ 650.000", html = TRUE, class = c("html",     "character"))), class = c("tutorial_question_answer", "tutorial_quiz_answer")), structure(list(id = "lnr_ans_2178b8f", option = "Entre $ 1.000.000 y $ 1.500.000",     value = "Entre $ 1.000.000 y $ 1.500.000", label = structure("Entre $ 1.000.000 y $ 1.500.000", html = TRUE, class = c("html",     "character")), correct = FALSE, message = structure("Nop, probá otra vez", html = TRUE, class = c("html",     "character"))), class = c("tutorial_question_answer", "tutorial_quiz_answer"))), button_labels = list(submit = structure("Enviar respuesta", html = TRUE, class = c("html", "character")), try_again = structure("Intenta de nuevo", html = TRUE, class = c("html", "character"))), messages = list(correct = structure("Correct!", html = TRUE, class = c("html", "character")), try_again = structure("Incorrect", html = TRUE, class = c("html", "character")), incorrect = structure("Incorrect", html = TRUE, class = c("html", "character")), message = NULL, post_message = NULL), ids = list(    answer = "hist-6-1-answer", question = "hist-6-1"), loading = structure("<strong>Loading:<\u002fstrong> \n¿En qué rango salarial encontramos otro outlier o valor atípico?\n<br/><br/><br/>", html = TRUE, class = c("html", "character")), random_answer_order = FALSE, allow_retry = TRUE,     seed = 633369419.705064, options = list()), class = c("learnr_radio", "tutorial_question")))
 </script>
  
 <script type="application/shiny-prerendered" data-context="server">
@@ -1331,11 +1333,9 @@ output$`tutorial-exercise-des-7-output` <- renderUI({
 <!--/html_preserve-->
 <!--html_preserve-->
 <script type="application/shiny-prerendered" data-context="execution_dependencies">
-{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["packages"]}},"value":[{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["packages","version"]},"class":{"type":"character","attributes":{},"value":["data.frame"]},"row.names":{"type":"integer","attributes":{},"value":[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61,62,63,64,65,66,67,68,69,70,71,72,73,74,75,76,77,78,79,80,81,82,83,84,85,86,87,88,89,90,91,92,93,94,95,96,97,98,99,100,101,102,103,104,105,106,107,108,109,110,111,112,113,114,115,116,117]}},"value":[{"type":"character","attributes":{},"value":["assertthat","backports","base","base64enc","broom","bslib","cellranger","checkmate","cli","cluster","codetools","colorspace","compiler","crayon","data.table","datasets","DBI","dbplyr","digest","dplyr","ellipsis","entropy","evaluate","fansi","farver","fastmap","forcats","foreign","Formula","fs","funModeling","generics","ggplot2","glue","graphics","grDevices","grid","gridExtra","gtable","haven","highr","Hmisc","hms","htmlTable","htmltools","htmlwidgets","httpuv","httr","jpeg","jquerylib","jsonlite","knitr","labeling","later","lattice","latticeExtra","lazyeval","learnr","lifecycle","lubridate","magick","magrittr","markdown","Matrix","matrixStats","methods","mime","modelr","moments","munsell","nnet","pander","pillar","pkgconfig","plyr","png","promises","pryr","purrr","R6","rapportools","RColorBrewer","Rcpp","readr","readxl","reprex","reshape2","rlang","rmarkdown","ROCR","rpart","rprojroot","rstudioapi","rvest","sass","scales","shiny","splines","stats","stringi","stringr","summarytools","survival","tcltk","tibble","tidyr","tidyselect","tidyverse","tools","utf8","utils","vctrs","withr","xfun","xml2","xtable","yaml"]},{"type":"character","attributes":{},"value":["0.2.1","1.2.1","4.0.5","0.1-3","0.7.6","0.2.4","1.1.0","2.0.0","2.5.0","2.1.1","0.2-18","2.0-1","4.0.5","1.4.1","1.14.0","4.0.5","1.1.1","2.1.1","0.6.27","1.0.5","0.3.2","1.3.0","0.14","0.4.2","2.1.0","1.1.0","0.5.1","0.8-81","1.2-4","1.5.0","1.9.4","0.1.0","3.3.3","1.4.2","4.0.5","4.0.5","4.0.5","2.3","0.3.0","2.4.1","0.9","4.5-0","1.0.0","2.1.0","0.5.1.1","1.5.3","1.6.0","1.4.2","0.1-8.1","0.1.4","1.7.2","1.33","0.4.2","1.2.0","0.20-41","0.6-29","0.2.2","0.10.1","1.0.0","1.7.10","2.7.2","2.0.1","1.1","1.3-2","0.58.0","4.0.5","0.10","0.1.8","0.14","0.5.0","7.3-15","0.6.3","1.6.0","2.0.3","1.8.6","0.1-7","1.2.0.1","0.1.4","0.3.4","2.5.0","1.0","1.1-2","1.0.6","1.4.0","1.3.1","2.0.0","1.4.4","0.4.11","2.7","1.0-11","4.1-15","2.0.2","0.13","1.0.0","0.3.1","1.1.1","1.6.0","4.0.5","4.0.5","1.5.3","1.4.0","0.9.9","3.2-10","4.0.5","3.1.1","1.1.3","1.1.1","1.3.1","4.0.5","1.2.1","4.0.5","0.3.6","2.4.2","0.22","1.3.2","1.8-4","2.2.1"]}]}]}
+{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["packages"]}},"value":[{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["packages","version"]},"class":{"type":"character","attributes":{},"value":["data.frame"]},"row.names":{"type":"integer","attributes":{},"value":[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61,62,63,64,65,66,67,68,69,70,71,72,73,74,75,76,77,78,79,80,81,82,83,84,85,86,87,88,89,90,91,92,93,94,95,96,97,98,99,100,101,102,103,104,105,106,107,108,109,110,111,112,113,114,115,116,117,118]}},"value":[{"type":"character","attributes":{},"value":["assertthat","backports","base","base64enc","broom","bslib","cellranger","checkmate","cli","cluster","codetools","colorspace","compiler","crayon","curl","data.table","datasets","DBI","dbplyr","digest","dplyr","ellipsis","entropy","evaluate","fansi","farver","fastmap","forcats","foreign","Formula","fs","funModeling","generics","ggplot2","glue","graphics","grDevices","grid","gridExtra","gtable","haven","highr","Hmisc","hms","htmlTable","htmltools","htmlwidgets","httpuv","httr","jpeg","jquerylib","jsonlite","knitr","labeling","later","lattice","latticeExtra","lazyeval","learnr","lifecycle","lubridate","magick","magrittr","markdown","Matrix","matrixStats","methods","mime","modelr","moments","munsell","nnet","pander","pillar","pkgconfig","plyr","png","promises","pryr","purrr","R6","rapportools","RColorBrewer","Rcpp","readr","readxl","reprex","reshape2","rlang","rmarkdown","ROCR","rpart","rprojroot","rstudioapi","rvest","sass","scales","shiny","splines","stats","stringi","stringr","summarytools","survival","tcltk","tibble","tidyr","tidyselect","tidyverse","tools","utf8","utils","vctrs","withr","xfun","xml2","xtable","yaml"]},{"type":"character","attributes":{},"value":["0.2.1","1.2.1","4.0.5","0.1-3","0.7.6","0.2.4","1.1.0","2.0.0","2.5.0","2.1.1","0.2-18","2.0-1","4.0.5","1.4.1","4.3.1","1.14.0","4.0.5","1.1.1","2.1.1","0.6.27","1.0.5","0.3.2","1.3.0","0.14","0.4.2","2.1.0","1.1.0","0.5.1","0.8-81","1.2-4","1.5.0","1.9.4","0.1.0","3.3.3","1.4.2","4.0.5","4.0.5","4.0.5","2.3","0.3.0","2.4.1","0.9","4.5-0","1.0.0","2.1.0","0.5.1.1","1.5.3","1.6.0","1.4.2","0.1-8.1","0.1.4","1.7.2","1.33","0.4.2","1.2.0","0.20-41","0.6-29","0.2.2","0.10.1","1.0.0","1.7.10","2.7.2","2.0.1","1.1","1.3-2","0.58.0","4.0.5","0.10","0.1.8","0.14","0.5.0","7.3-15","0.6.3","1.6.0","2.0.3","1.8.6","0.1-7","1.2.0.1","0.1.4","0.3.4","2.5.0","1.0","1.1-2","1.0.6","1.4.0","1.3.1","2.0.0","1.4.4","0.4.11","2.7","1.0-11","4.1-15","2.0.2","0.13","1.0.0","0.3.1","1.1.1","1.6.0","4.0.5","4.0.5","1.5.3","1.4.0","0.9.9","3.2-10","4.0.5","3.1.1","1.1.3","1.1.1","1.3.1","4.0.5","1.2.1","4.0.5","0.3.6","2.4.2","0.22","1.3.2","1.8-4","2.2.1"]}]}]}
 </script>
 <!--/html_preserve-->
-</div>
-</div>
 </div>
 
 </div> <!-- topics -->

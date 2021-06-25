@@ -11,7 +11,7 @@ library(learnr)
 knitr::opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE)
 ```
 
-# PEPA
+## PEPA
 
 ![](https://youtu.be/Mz4GbMCqvcY){width="80%"}
 
@@ -23,7 +23,7 @@ Los scripts que usaremos en este documento los podés copiar y pegar para reutil
 -   [Tutorial interactivo de Introducción a R](https://chechoid.shinyapps.io/clase_1_introduccion_r_y_tidyverse/)
 -   Todo el material del [Club de R para RRHH](https://drive.google.com/drive/folders/1Qck3z_t6XLRXb2vbN-00931DgdJZ0yse?usp=sharing) en Google Drive. Cada carpeta de cada mes, tiene un link a su respectivo video en Youtube. Y acá hay contenido introductorio, hasta cosas más complejas como análisis predictivos, text mining o análisis de clusters por ejemplo.
 
-### ¿Cómo usar este tutorial?
+## ¿Cómo usar este tutorial?
 
 Este tutorial va a tener distintas secciones, en las cuales vas a poder correr los resultados directamente aprentando el ícono que dice **"Run Code"**.
 
@@ -66,20 +66,22 @@ edad <- anio_actual - anio_nacimiento
 edad
 ```
 
+
+## Explorando los datos
+
 Para este tutorial vamos a utilizar el dataset de la **Encuesta KIWI de Sueldos LATAM** 🥝 que están almacenados en un objeto .`RDS` que es una extensión propia de R para almacenar datos y que mantiene las características de los datos. También hay una versión `.csv` en el [repositorio de esta clase](https://github.com/chechoid/dpa-itba/tree/main/PEPA).
 
-```{r carga-datos, echo=TRUE}
+```{r carga-datos, echo=TRUE, eval=FALSE}
 # Cargamos los datos
 kiwi_ar <- readRDS("kiwi_ar.RDS")
 ```
 
-### Explorando los datos
 
 ```{r carga-datos2}
 library(readr)
 library(dplyr)
 
-kiwi_ar <- read_delim("kiwi_ar.csv", delim = ";")
+kiwi_ar <- read_delim("https://raw.githubusercontent.com/chechoid/dpa-itba/main/PEPA/kiwi_ar.csv", delim = ";")
 
 # Ordena los puestos por jerarquía
 kiwi_ar <- kiwi_ar %>% 
@@ -117,7 +119,7 @@ quiz(
 ))
 ```
 
-# Análisis Univariado
+## Análisis Univariado
 
 Con el **análisis univariado** lo que hacemos es analizar una variable a la vez. Dependiendo si la variable es *categórica* o *numérica* vamos a poder realizar distintas cálculos y análisis.
 
@@ -186,15 +188,15 @@ quiz(
 ))
 ```
 
-### Repaso
+## Repaso
 
--   **Distribución de frecuencias:** Que es el conteo de ingresos por trimestre.
+-   **Distribución de frecuencias:** Que es el conteo, en este caso, de la cantidad de respuestas recibidas por puesto.
 
 -   **Frecuencias relativas:** Que es el *porcentaje* que representa el conteo sobre el total.
 
 -   **Frecuencia relativas acumuladas:** Que representa el *porcentaje acumulado* de los ingresos de cada trimestre.
 
-### Práctica 1
+## Práctica 1
 
 ¿Se puede tomar mate en todas las empresas? Veamos la cantidad de respuestas de la variable `mate` para ver en cuántos casos respondieron que sí se podía tomar, y cuántos respondieron que no. Reemplazá los espacios vacíos según corresponda al nombre de la función o de la variable.
 
@@ -255,7 +257,7 @@ kiwi_ar %>%
 
 Para visualizar una sola variable categórica, las opciones principales son los gráficos de **barras** y los gráficos de **torta** o de **dona**, con sus respectivas ventajas y desventajas.
 
-### Gráficos de barras
+## Gráficos de barras
 
 Para hacer un gráfico de barras podemos utilizar una función la función de R base `plot()` indicando la variable que queremos visualizar (indicando primero el nombre del data frame después del signo `$` el nombre de la variable).
 
@@ -314,7 +316,7 @@ quiz(
 )
 ```
 
-### Gráficos de torta o de dona
+## Gráficos de torta o de dona
 
 Para bien o para mal, los gráficos de torta no tienen un *geom* específico, y si bien en R base hay una función específica para hacerlos, requiere un poco de preprocesamiento previo.
 
@@ -461,7 +463,7 @@ Esta capa extra nos ayuda a identificar de manera más clara la **distribución*
 
 Busquen información sobre el [Cuarteto de Anscombe](http://ptarra.blogspot.com/2013/05/el-cuarteto-de-anscombe.html) y especialmente del [Datasaurus Dozen](http://www.thefunctionalart.com/2016/08/download-datasaurus-never-trust-summary.html).
 
-### Práctica 2
+## Práctica 2
 
 ```{r carga-datos3}
 library(funModeling)
@@ -545,7 +547,7 @@ ____(______$________)
 hist(kiwi_limpio$sueldo_bruto
 ```
 
-# Medidas de resumen estadístico
+## Medidas de resumen estadístico
 
 La estadística es una disciplina que suele trabajar con *muestras*. Con cierta frecuencia, nos encontramos que no podemos analizar a todos los empleados porque sería muy costoso en tiempo y recursos, o bien porque nos interesa segmentar el análisis sobre alguna muestra en particular.
 
@@ -610,7 +612,7 @@ Como ya saben, el promedio es sensible a los valores extremos. Creen un nuevo ve
 
 ```{r prom-3, exercise=TRUE}
 # Crear un nuevo vector con los valores de edad
-edades_2 <- edad
+edades_2 <- edades
 
 # Modificar el primer elemento y poner 120
 edades_2[1] <- ____
@@ -777,7 +779,7 @@ Ya sé, se están preguntando *"¿Para qué carajo me sirve todo esto?"*. El **r
 
 Si a ese *rango intercuartil* lo multiplico por 1.5, y a eso se lo restamos al *primer cuartil* obtenemos el límite inferior para determinar los outliers, y si ese resultado (IQR x 1.5) se lo sumamos al *tercer cuartil* obtenemos el límite superior para detectar los outliers.
 
-```{r q4, exercise=TRUE}
+```{r q4, exercise=TRUE, exercise.lines = 20}
 # Calcular el primer cuartil
 q1 <- quantile(kiwi_ar$edad, 0.25)
 
@@ -957,7 +959,7 @@ summary(z_edad)
 
 Más adelante retomamos el tema, por ahora lo dejamos acá.
 
-### Práctica 3
+## Práctica 3
 
 Calcular el promedio, la mediana y el desvío estándar de la variable `sueldo_bruto` del data frame `kiwi_ar`.
 

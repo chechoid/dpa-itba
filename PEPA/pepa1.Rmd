@@ -8,7 +8,23 @@ runtime: shiny_prerendered
 
 ```{r setup, include=FALSE}
 library(learnr)
+library(tidyverse)
+library(funModeling)
 knitr::opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE)
+
+kiwi_ar <- readRDS("kiwi_ar.RDS")
+
+percentiles = profiling_num(kiwi_ar$sueldo_bruto)
+
+p05 = percentiles[1,6]
+p95 = percentiles[1,10]
+
+kiwi_limpio = kiwi_ar %>% 
+  filter(between(sueldo_bruto, p05, p95))
+
+df_edad <- read.csv("edades.csv")
+edades <- df_edad %>% select(Edad) %>% pull()
+edades <- sort(edades)
 ```
 
 ## PEPA
@@ -78,25 +94,25 @@ kiwi_ar <- readRDS("kiwi_ar.RDS")
 
 
 ```{r carga-datos2}
-library(readr)
-library(dplyr)
-
-kiwi_ar <- read_delim("https://raw.githubusercontent.com/chechoid/dpa-itba/main/PEPA/kiwi_ar.csv", delim = ";")
-
-# Ordena los puestos por jerarquía
-kiwi_ar <- kiwi_ar %>% 
-  mutate(puesto = factor(puesto, levels = c("Administrativo", "Analista", "HRBP",
-                                            "Responsable", "Jefe", "Gerente")))
-
-kiwi_ar <- kiwi_ar %>% 
-  mutate(rangos_aumentos = case_when(
-    ajuste_porcentaje == 0  ~ "Sin aumentos",
-    ajuste_porcentaje <= 10 ~ "Entre 1 y 10",
-    ajuste_porcentaje <= 20 ~ "Entre 11 y 20",
-    ajuste_porcentaje > 30  ~ "Entre 21 y 30",
-    ajuste_porcentaje = TRUE ~ "Más de 30"
-  ),
-  rangos_aumentos = factor(rangos_aumentos, levels = c("Sin aumentos", "Entre 1 y 10", "Entre 11 y 20", "Entre 21 y 30", "Más de 30")))
+# library(readr)
+# library(dplyr)
+# 
+# kiwi_ar <- read_delim("https://raw.githubusercontent.com/chechoid/dpa-itba/main/PEPA/kiwi_ar.csv", delim = ";")
+# 
+# # Ordena los puestos por jerarquía
+# kiwi_ar <- kiwi_ar %>% 
+#   mutate(puesto = factor(puesto, levels = c("Administrativo", "Analista", "HRBP",
+#                                             "Responsable", "Jefe", "Gerente")))
+# 
+# kiwi_ar <- kiwi_ar %>% 
+#   mutate(rangos_aumentos = case_when(
+#     ajuste_porcentaje == 0  ~ "Sin aumentos",
+#     ajuste_porcentaje <= 10 ~ "Entre 1 y 10",
+#     ajuste_porcentaje <= 20 ~ "Entre 11 y 20",
+#     ajuste_porcentaje > 30  ~ "Entre 21 y 30",
+#     ajuste_porcentaje = TRUE ~ "Más de 30"
+#   ),
+#   rangos_aumentos = factor(rangos_aumentos, levels = c("Sin aumentos", "Entre 1 y 10", "Entre 11 y 20", "Entre 21 y 30", "Más de 30")))
 
 ```
 
